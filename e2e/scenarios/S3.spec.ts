@@ -5,8 +5,8 @@ test("S3 비교해 보고 이번에는 마시지 않기로 한다", async ({ pag
   await logIn(page)
   const before = await todayCount(page)
   await page.getByRole("link", { name: "마시기 전 확인" }).first().click()
-  await page.getByRole("button", { name: /스타벅스 카페라떼/ }).click()
-  await page.getByRole("button", { name: "톨", exact: true }).click()
+  await page.getByRole("button", { name: "스타벅스 아이스 카페 라떼" }).click()
+  await page.getByRole("button", { name: "Tall 355ml", exact: true }).click()
   await page.getByRole("button", { name: "이미 음료가 있어요" }).click()
   // 5. [바꾸기]를 누른다
   await page.getByRole("button", { name: "바꾸기", exact: true }).click()

@@ -6,10 +6,10 @@ test("S2 이미 받은 커피를 마시기 직전에 확인하고 반만 마시�
   const before = await todayCount(page)
   // 1. 홈에서 [마시기 전 확인]을 누른다
   await page.getByRole("link", { name: "마시기 전 확인" }).first().click()
-  // 2. 음료 목록에서 "메가커피 아이스 아메리카노"를 고른다
-  await page.getByRole("button", { name: /메가커피 아이스 아메리카노/ }).click()
-  // 3. 사이즈에서 "라지"를 고른다
-  await page.getByRole("button", { name: "라지", exact: true }).click()
+  // 2. 음료 목록에서 "메가커피 메가리카노 (ICE)"를 고른다
+  await page.getByRole("button", { name: "메가커피 메가리카노 (ICE)" }).click()
+  // 3. 사이즈에서 "946ml"을 고른다
+  await page.getByRole("button", { name: "946ml", exact: true }).click()
   // 4. [이미 음료가 있어요]를 누른다
   await page.getByRole("button", { name: "이미 음료가 있어요" }).click()
   // 5. [오늘도 01:00]을 누른다
@@ -28,5 +28,5 @@ test("S2 이미 받은 커피를 마시기 직전에 확인하고 반만 마시�
   await expect(page).toHaveURL(/\/home/)
   expect(await todayCount(page)).toBe(before + 1)
   await page.getByRole("link", { name: /오늘 커피 \d+잔/ }).first().click()
-  await expect(page.getByText("메가커피 아이스 아메리카노 라지 · 반만").first()).toBeVisible()
+  await expect(page.getByText("메가커피 메가리카노 (ICE) 946ml · 반만").first()).toBeVisible()
 })

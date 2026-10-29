@@ -96,8 +96,8 @@
 - [ ] AI 기능은 실제 응답을 기다려 확인, 흐름 하나가 로컬에서 1분 안
 - [ ] viewport를 spec에서 바꾸지 않음, platform의 화면(both면 둘 다)에서 통과
 - [ ] globalSetup·storageState 등 playwright.config.ts에만 있는 설정에 기대지 않음
-- [x] `docker compose down -v`, `docker compose up -d --build` 뒤 `npx playwright test`로 모든 흐름 통과 (S1~S7, 10/30)
-- 흐름별 E2E 결과(통과 / 실패 단계와 이유):
+- [x] `docker compose down -v`, `docker compose up -d --build` 뒤 `npx playwright test`로 모든 흐름 통과 (S1~S8, 10/30 03시)
+- 흐름별 E2E 결과(통과 / 실패 단계와 이유): 10/30 03시 빈 DB docker(mobile 390px)에서 S1~S8 8/8 통과(30.8초). 서버 시간대 UTC로 띄워도 S1~S8 통과(Vercel 조건). 음료는 공식 23개 메뉴 기준
 
 ## 7. 최종 검증
 

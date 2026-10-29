@@ -73,7 +73,7 @@ async function main() {
   }
 }
 
-// 계정 "피곤한 학생"(S8 데모): 시드 시각 기준 잠드는 시각은 2시간 뒤, 1시간 전에 메가커피 아이스 아메리카노 라지를 다 마셨다.
+// 계정 "피곤한 학생"(S8 데모): 시드 시각 기준 잠드는 시각은 2시간 뒤, 1시간 전에 메가커피 메가리카노 (ICE) 라지를 다 마셨다.
 // 그래서 언제 테스트해도 잘 때 남을 카페인이 "많이 남음"(100mg 이상)에서 시작한다.
 async function seedTired() {
   if (await db.user.findUnique({ where: { email: TIRED_EMAIL } })) return;

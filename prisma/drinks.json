@@ -1,11 +1,20 @@
 {
-  "_note": "각 브랜드 공식 홈페이지의 공개 카페인 함량(정수 반올림)과 링크. 2026-10-30 확인(점검 #3). 공식 값이 없는 메뉴(스타벅스 그란데)는 넣지 않는다. id는 바꾸지 않는다(시드·테스트가 참조).",
+  "_note": "각 브랜드 공식 홈페이지의 공개 함량(2026-10-30 확인, 소수점 반올림). 메뉴 이름·용량은 공식 표기. 공식 값이 없는 메뉴는 넣지 않는다. id는 바꾸지 않는다.",
   "drinks": [
     {
       "id": "mega-iced-americano-r",
       "brand": "메가커피",
-      "menu": "아이스 아메리카노",
-      "size": "레귤러",
+      "menu": "아메리카노 (ICE)",
+      "size": "710ml",
+      "sizeRank": 1,
+      "caffeineMg": 236,
+      "sourceUrl": "https://www.mega-mgccoffee.com/menu/?menu_category1=1&menu_category2=1"
+    },
+    {
+      "id": "mega-hot-americano",
+      "brand": "메가커피",
+      "menu": "아메리카노 (HOT)",
+      "size": "591ml",
       "sizeRank": 1,
       "caffeineMg": 236,
       "sourceUrl": "https://www.mega-mgccoffee.com/menu/?menu_category1=1&menu_category2=1"
@@ -13,102 +22,192 @@
     {
       "id": "mega-iced-americano-l",
       "brand": "메가커피",
-      "menu": "아이스 아메리카노",
-      "size": "라지",
-      "sizeRank": 2,
+      "menu": "메가리카노 (ICE)",
+      "size": "946ml",
+      "sizeRank": 1,
       "caffeineMg": 354,
       "sourceUrl": "https://www.mega-mgccoffee.com/menu/?menu_category1=1&menu_category2=1"
     },
     {
       "id": "mega-latte-r",
       "brand": "메가커피",
-      "menu": "카페라떼",
-      "size": "레귤러",
+      "menu": "카페라떼 (ICE)",
+      "size": "591ml",
       "sizeRank": 1,
       "caffeineMg": 236,
       "sourceUrl": "https://www.mega-mgccoffee.com/menu/?menu_category1=1&menu_category2=1"
     },
     {
+      "id": "mega-hot-latte",
+      "brand": "메가커피",
+      "menu": "카페라떼 (HOT)",
+      "size": "591ml",
+      "sizeRank": 1,
+      "caffeineMg": 236,
+      "sourceUrl": "https://www.mega-mgccoffee.com/menu/?menu_category1=1&menu_category2=1"
+    },
+    {
+      "id": "mega-iced-latte-l",
+      "brand": "메가커피",
+      "menu": "왕메가카페라떼 (ICE)",
+      "size": "946ml",
+      "sizeRank": 1,
+      "caffeineMg": 354,
+      "sourceUrl": "https://www.mega-mgccoffee.com/menu/?menu_category1=1&menu_category2=1"
+    },
+    {
       "id": "compose-iced-americano-r",
       "brand": "컴포즈커피",
-      "menu": "아이스 아메리카노",
-      "size": "레귤러",
+      "menu": "I-아메리카노",
+      "size": "591ml",
       "sizeRank": 1,
       "caffeineMg": 186,
       "sourceUrl": "https://composecoffee.com/index.php?mid=compose&act=dispCafemenuGalleryItem&category_srl=303364&item_srl=303753"
     },
     {
+      "id": "compose-hot-americano",
+      "brand": "컴포즈커피",
+      "menu": "H-아메리카노",
+      "size": "591ml",
+      "sizeRank": 1,
+      "caffeineMg": 186,
+      "sourceUrl": "https://composecoffee.com/index.php?mid=compose&act=dispCafemenuGalleryItem&category_srl=303364&item_srl=303751"
+    },
+    {
       "id": "compose-iced-americano-l",
       "brand": "컴포즈커피",
-      "menu": "아이스 아메리카노",
-      "size": "라지",
-      "sizeRank": 2,
+      "menu": "I-빅포즈 아메리카노",
+      "size": "946ml",
+      "sizeRank": 1,
       "caffeineMg": 372,
       "sourceUrl": "https://composecoffee.com/index.php?mid=compose&act=dispCafemenuGalleryItem&category_srl=303364&item_srl=303758"
     },
     {
       "id": "compose-latte-r",
       "brand": "컴포즈커피",
-      "menu": "카페라떼",
-      "size": "레귤러",
+      "menu": "I-카페라떼",
+      "size": "591ml",
       "sizeRank": 1,
       "caffeineMg": 248,
       "sourceUrl": "https://composecoffee.com/index.php?mid=compose&act=dispCafemenuGalleryItem&category_srl=303364&item_srl=303762"
     },
     {
+      "id": "compose-hot-latte",
+      "brand": "컴포즈커피",
+      "menu": "H-카페라떼",
+      "size": "591ml",
+      "sizeRank": 1,
+      "caffeineMg": 248,
+      "sourceUrl": "https://composecoffee.com/index.php?mid=compose&act=dispCafemenuGalleryItem&category_srl=303364&item_srl=303760"
+    },
+    {
+      "id": "compose-iced-latte-l",
+      "brand": "컴포즈커피",
+      "menu": "I-빅포즈 카페라떼",
+      "size": "946ml",
+      "sizeRank": 1,
+      "caffeineMg": 495,
+      "sourceUrl": "https://composecoffee.com/index.php?mid=compose&act=dispCafemenuGalleryItem&category_srl=303364&item_srl=303802"
+    },
+    {
       "id": "paik-iced-americano-r",
       "brand": "빽다방",
-      "menu": "아이스 아메리카노",
-      "size": "레귤러",
+      "menu": "아메리카노(ICED)",
+      "size": "660ml",
       "sizeRank": 1,
       "caffeineMg": 166,
       "sourceUrl": "https://paikdabang.com/menu/menu_coffee/"
     },
     {
+      "id": "paik-hot-americano",
+      "brand": "빽다방",
+      "menu": "아메리카노(HOT)",
+      "size": "510ml",
+      "sizeRank": 1,
+      "caffeineMg": 197,
+      "sourceUrl": "https://paikdabang.com/menu/menu_coffee/"
+    },
+    {
       "id": "paik-iced-americano-l",
       "brand": "빽다방",
-      "menu": "아이스 아메리카노",
-      "size": "라지",
-      "sizeRank": 2,
+      "menu": "빽사이즈 아메리카노(ICED)",
+      "size": "990ml",
+      "sizeRank": 1,
       "caffeineMg": 293,
       "sourceUrl": "https://paikdabang.com/menu/menu_coffee/"
     },
     {
       "id": "paik-latte-r",
       "brand": "빽다방",
-      "menu": "카페라떼",
-      "size": "레귤러",
+      "menu": "카페라떼(ICED)",
+      "size": "660ml",
       "sizeRank": 1,
       "caffeineMg": 163,
       "sourceUrl": "https://paikdabang.com/menu/menu_coffee/"
     },
     {
+      "id": "paik-hot-latte",
+      "brand": "빽다방",
+      "menu": "카페라떼(HOT)",
+      "size": "510ml",
+      "sizeRank": 1,
+      "caffeineMg": 152,
+      "sourceUrl": "https://paikdabang.com/menu/menu_coffee/"
+    },
+    {
+      "id": "paik-iced-latte-l",
+      "brand": "빽다방",
+      "menu": "빽사이즈 카페라떼(ICED)",
+      "size": "990ml",
+      "sizeRank": 1,
+      "caffeineMg": 286,
+      "sourceUrl": "https://paikdabang.com/menu/menu_coffee/"
+    },
+    {
       "id": "sbux-iced-americano-t",
       "brand": "스타벅스",
-      "menu": "아이스 아메리카노",
-      "size": "톨",
+      "menu": "아이스 카페 아메리카노",
+      "size": "Tall 355ml",
       "sizeRank": 1,
       "caffeineMg": 150,
       "sourceUrl": "https://www.starbucks.co.kr/menu/drink_view.do?product_cd=110563"
     },
     {
+      "id": "sbux-hot-americano-t",
+      "brand": "스타벅스",
+      "menu": "카페 아메리카노",
+      "size": "Tall 355ml",
+      "sizeRank": 1,
+      "caffeineMg": 150,
+      "sourceUrl": "https://www.starbucks.co.kr/menu/drink_view.do?product_cd=94"
+    },
+    {
       "id": "sbux-latte-t",
       "brand": "스타벅스",
-      "menu": "카페라떼",
-      "size": "톨",
+      "menu": "아이스 카페 라떼",
+      "size": "Tall 355ml",
       "sizeRank": 1,
       "caffeineMg": 75,
       "sourceUrl": "https://www.starbucks.co.kr/menu/drink_view.do?product_cd=110569"
     },
     {
+      "id": "sbux-hot-latte-t",
+      "brand": "스타벅스",
+      "menu": "카페 라떼",
+      "size": "Tall 355ml",
+      "sizeRank": 1,
+      "caffeineMg": 75,
+      "sourceUrl": "https://www.starbucks.co.kr/menu/drink_view.do?product_cd=41"
+    },
+    {
       "id": "sbux-decaf-americano-t",
       "brand": "스타벅스",
-      "menu": "아이스 아메리카노",
-      "size": "톨",
+      "menu": "아이스 카페 아메리카노",
+      "size": "Tall 355ml",
       "sizeRank": 1,
       "caffeineMg": 10,
-      "isDecaf": true,
-      "sourceUrl": "https://www.starbucks.co.kr/menu/drink_view.do?product_cd=9200000000616"
+      "sourceUrl": "https://www.starbucks.co.kr/menu/drink_view.do?product_cd=9200000000616",
+      "isDecaf": true
     }
   ],
   "cafes": [

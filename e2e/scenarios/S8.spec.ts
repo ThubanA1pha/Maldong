@@ -10,10 +10,10 @@ test("S8 많이 마신 날 카페 앞에서 캐릭터가 먼저 말을 걸고 �
   // 2. "카페 앞이네? 또 마시는 거야…?" 말풍선에서 [뭐 마실지 볼래]를 누른다
   await expect(page.getByText(/카페 앞이네\? 또 마시는 거야…\?/).first()).toBeVisible()
   await page.getByRole("link", { name: "뭐 마실지 볼래" }).click()
-  // 3. 음료 목록에서 "스타벅스 아이스 아메리카노"를 고른다
-  await page.getByRole("button", { name: /스타벅스 아이스 아메리카노/ }).click()
-  // 4. 사이즈에서 "톨"을 고른다
-  await page.getByRole("button", { name: "톨", exact: true }).click()
+  // 3. 음료 목록에서 "스타벅스 아이스 카페 아메리카노"를 고른다
+  await page.getByRole("button", { name: "스타벅스 아이스 카페 아메리카노" }).click()
+  // 4. 사이즈에서 "Tall 355ml"을 고른다
+  await page.getByRole("button", { name: "Tall 355ml", exact: true }).click()
   // 5. [오늘도 …]를 누른다
   await page.getByRole("button", { name: /^오늘도 / }).click()
   // 6. 선택지에서 [디카페인]을 누른다
@@ -25,5 +25,5 @@ test("S8 많이 마신 날 카페 앞에서 캐릭터가 먼저 말을 걸고 �
   await page.getByRole("button", { name: "이 양으로 마시기 시작" }).click()
   await expect(page).toHaveURL(/\/home/)
   await page.getByRole("link", { name: /오늘 커피 \d+잔/ }).first().click()
-  await expect(page.getByText("스타벅스 아이스 아메리카노 톨 · 디카페인").first()).toBeVisible()
+  await expect(page.getByText("스타벅스 아이스 카페 아메리카노 Tall 355ml · 디카페인").first()).toBeVisible()
 })
