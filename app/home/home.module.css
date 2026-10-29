@@ -169,3 +169,8 @@
   color: var(--accent-strong);
   text-decoration: none;
 }
+
+/* ---- 로딩 ---- */
+.skeleton { height: 76px; border-radius: var(--radius); background: var(--line); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
