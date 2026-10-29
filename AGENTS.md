@@ -4,9 +4,10 @@
 
 ## 0. 작업 시작할 때마다 (가장 먼저)
 
-1. `git pull --rebase origin main`
+1. **main에서 무엇이 바뀌었는지 먼저 본다:** `git fetch origin && git log --oneline HEAD..origin/main` (공통 파일이 바뀌었으면 `git diff --stat HEAD origin/main`). 그다음 `git pull --rebase origin main`
 2. **팀 공지와 최신 점검 결과를 읽는다:** `git fetch origin notes && git show origin/notes:NOTES.md`
    - 공지·점검·할 일은 main이 아니라 `notes` 브랜치에만 둔다(채점기가 main 문서를 읽기 때문). main에 공지용 md를 만들지 않는다.
+   - NOTES.md 맨 위 **"변경 기록"**에서 1번에서 본 main 커밋이 내 담당에 무엇을 요구하는지 확인한다.
    - NOTES.md에서 **내 담당(p1~p5) 항목을 먼저** 처리하고, 그다음 원래 하던 화면 작업을 한다.
    - "예정 변경"에 적힌 시나리오는 아직 main 기준이 아니다. 내 브랜치에서 새 시나리오를 통과하도록 미리 맞추되, 지금 main의 시나리오도 계속 통과해야 한다.
 3. 커밋 메시지에 처리한 점검 항목 번호를 적는다. 예: `p2: review#1-3 프로필 로그아웃 버튼`

@@ -9,6 +9,8 @@ const data = JSON.parse(readFileSync(new URL("./drinks.json", import.meta.url), 
 
 const EMAIL = process.env.SEED_USER_EMAIL ?? "student@example.com";
 const PASSWORD = process.env.SEED_USER_PASSWORD ?? "loopthon-2026";
+const TIRED_EMAIL = process.env.SEED_TIRED_EMAIL ?? "tired@example.com";
+const TIRED_PASSWORD = process.env.SEED_TIRED_PASSWORD ?? "loopthon-2026";
 
 const HOUR = 3_600_000;
 const startOfToday = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
@@ -23,6 +25,7 @@ async function main() {
     await db.cafe.upsert({ where: { id: c.id }, create: { id: c.id, ...row }, update: row });
   }
 
+  await seedTired();
   if (await db.user.findUnique({ where: { email: EMAIL } })) return; // 이미 시드됨
   const user = await db.user.create({
     data: {
@@ -58,6 +61,27 @@ async function main() {
     const at = new Date(today.getTime() - daysAgo * 24 * HOUR + hour * HOUR);
     await rec(drinkId, option, at, { confirmedPortion: portion, sleepAnswer: sleep, answeredAt: new Date(at.getTime() + 12 * HOUR) });
   }
+}
+
+// 계정 "피곤한 학생"(S8 데모): 시드 시각 기준 잠드는 시각은 2시간 뒤, 1시간 전에 메가커피 아이스 아메리카노 라지를 다 마셨다.
+// 그래서 언제 테스트해도 잘 때 남을 카페인이 "많이 남음"(100mg 이상)에서 시작한다.
+async function seedTired() {
+  if (await db.user.findUnique({ where: { email: TIRED_EMAIL } })) return;
+  const now = Date.now();
+  const bed = new Date(now + 2 * HOUR);
+  const bedtime = `${String(bed.getHours()).padStart(2, "0")}:${String(bed.getMinutes()).padStart(2, "0")}`;
+  const drink = data.drinks.find((d) => d.id === "mega-iced-americano-l");
+  await db.user.create({
+    data: {
+      email: TIRED_EMAIL,
+      passwordHash: await bcrypt.hash(TIRED_PASSWORD, 10),
+      profile: { create: { usualBedtime: bedtime, sensitivity: "normal", mismatchDirection: null, mismatchCount: 0 } },
+      records: { create: {
+        drinkId: drink.id, option: "already", plannedMg: drink.caffeineMg, bedtime, predictedBand: "high",
+        startedAt: new Date(Math.max(startOfToday().getTime() + 60_000, now - HOUR)),
+      } },
+    },
+  });
 }
 
 main()

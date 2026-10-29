@@ -6,5 +6,7 @@
 export const E2E_BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000"
 export const E2E_USER_EMAIL = process.env.E2E_USER_EMAIL ?? "student@example.com"
 export const E2E_USER_PASSWORD = process.env.E2E_USER_PASSWORD ?? "loopthon-2026"
+export const E2E_TIRED_EMAIL = process.env.E2E_TIRED_EMAIL ?? "tired@example.com"
+export const E2E_TIRED_PASSWORD = process.env.E2E_TIRED_PASSWORD ?? "loopthon-2026"
 export const E2E_TA_EMAIL = process.env.E2E_TA_EMAIL ?? "ta@example.com"
 export const E2E_TA_PASSWORD = process.env.E2E_TA_PASSWORD ?? "loopthon-2026"

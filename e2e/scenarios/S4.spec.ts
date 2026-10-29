@@ -4,7 +4,7 @@ import { logIn } from "./_login"
 test("S4 카페 앞에서 캐릭터가 먼저 말을 걸고 하프샷으로 주문하기로 한다", async ({ page, context }) => {
   // 1. 등록된 카페 앞에서 홈을 연다 (시드의 대회장 좌표)
   await context.grantPermissions(["geolocation"])
-  await context.setGeolocation({ latitude: 0, longitude: 0 })
+  await context.setGeolocation({ latitude: 35.165706, longitude: 126.907069 })
   await logIn(page)
   // 2. 캐릭터의 "카페 앞이네?" 말풍선에서 [뭐 마실지 볼래]를 누른다
   await expect(page.getByText(/카페 앞이네\?/).first()).toBeVisible()

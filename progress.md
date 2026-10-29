@@ -3,9 +3,10 @@
 ## 현재 상태
 
 - 실제 서비스 저장소 폴더: C:\loopthon\Maldong (안내 키트는 C:\loopthon\loopthon-starter)
-- 현재 단계 / 다음 행동: 2단계 진행 중. 종이 캔버스 앞면을 docs/problem.yaml로 옮겨 push(d5eba92). 대시보드 표시 학생 확인 완료 → 2-A 문제 다지기 진행 중(고객 범위부터)
-- 학생에게 확인할 내용: 우리 팀 → 문제 정의 화면에 캔버스가 보이는지. 고객 칸(중학생~대학생/성인/공통)과 문제정의 문장(대학생)의 대상 범위
-- 이 컴퓨터 상태: GitHub CLI 설치함. Docker 미설치(3단계 전에 필요)
+- 현재 단계 / 다음 행동 (10/30 02시): 5·6단계 진행 중. 화면 10개 구현, 빈 DB docker에서 E2E S1~S7 통과, CI 파일 추가. 다음: 배포 URL 등록, 로그아웃 버튼, ①~④ Figma 반영, 시나리오 S2·S3 보강과 S8 추가(notes 브랜치 NOTES.md "예정 변경")
+- 학생에게 확인할 내용: 배포 담당과 계정, 음료 공개 함량 표(지금은 임시값)
+- 이 컴퓨터 상태: GitHub CLI, Docker 설치함
+- 팀 공지·점검 결과: main이 아니라 notes 브랜치의 NOTES.md
 
 ## 1. GitHub 준비
 
@@ -31,31 +32,31 @@
 - [ ] 외부 자료는 열리는 URL을 sources에 그대로 적고 원문이 주장을 직접 뒷받침하는지 확인, 출처 없는 수치 없음
 - [ ] 문제가 '우리 기능이 없어서'가 아니라 실제 상황·행동으로 서술됐는지 확인
 - [ ] 2-B 해법 찾기: 학생이 낸 해법과 결정을 solution_paths에, 기존 대안 대신 이 해법이어야 하는 이유를 학생 말로 why_ours에 작성
-- [ ] 2-C features에 학생이 고른 해법의 기능별 입력·결과·완료 조건 작성
+- [x] 2-C features에 학생이 고른 해법의 기능별 입력·결과·완료 조건 작성 (F1~F6)
 - [x] YAML 문법 검사, 등록된 레포의 기본 브랜치에 docs/problem.yaml push
 - [x] 학생이 개인 로그인으로 우리 팀 → 문제 정의를 열어 캔버스 표시 확인(Agent는 화면을 열 수 없음, 약 1분 캐시)
 - [ ] 핵심 사용자 흐름·기능별 동작 규칙·완료 조건·제외 범위를 팀과 확인
-- [ ] 로그인 필요 여부와 역할 이름(흐름 account·docker 시드 계정 역할 이름으로 씀) 결정
+- [x] 로그인 필요 여부와 역할 이름(흐름 account·docker 시드 계정 역할 이름으로 씀) 결정 (design_decision 6, 계정 "학생")
 - [ ] 첫 화면에서 알려 줄 것(로그인하지 않은 사람이 `/`에서 볼 서비스 이름·하는 일)을 학생과 정함
-- [ ] 주 사용 플랫폼(desktop·mobile·both)과 실제 사용 장면에 근거한 platformReason 작성
-- [ ] 사용자 핵심 흐름 3~8개를 scenarios.example.yaml 참고해 docs/scenarios.yaml에 작성(steps는 화면의 메뉴·버튼 이름으로 한 줄에 한 동작, 로그인 흐름은 account 지정), YAML 파서로 형식 확인 후 기본 브랜치 push
+- [x] 주 사용 플랫폼(desktop·mobile·both)과 실제 사용 장면에 근거한 platformReason 작성 (mobile)
+- [x] 사용자 핵심 흐름 3~8개를 scenarios.example.yaml 참고해 docs/scenarios.yaml에 작성(steps는 화면의 메뉴·버튼 이름으로 한 줄에 한 동작, 로그인 흐름은 account 지정), YAML 파서로 형식 확인 후 기본 브랜치 push
 - [ ] 서비스의 AI 호출 필요 여부 확인
 - [ ] README 등 기존 문서에 확인된 구현 설계 기록, 기본 브랜치 push
-- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸: https://github.com/ThubanA1pha/Maldong/blob/main/docs/problem.yaml / d5eba92cbca71a80a23d3764c8c53bf6a7df7d4c / 비어 있음: five_whys(뒷면), experiences, sources, why_ours, solution_paths, insight, features. 근본 문제의 Juliano & Griffiths(2004)는 열어 본 링크 없음
+- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸: https://github.com/ThubanA1pha/Maldong/blob/main/docs/problem.yaml / d5eba92cbca71a80a23d3764c8c53bf6a7df7d4c / (10/30) experiences·sources·why_ours·solution_paths·insight·features·design_decision 1~7 채움, scenarios S1~S7
 
 ## 3. 최소 화면 docker 실행·CI·첫 배포
 
-- [ ] 설계에 맞는 최소 화면과 서버 실행 구성 준비, Dockerfile 작성(빌드는 Dockerfile에서 끝내고 시작 명령은 서버 실행만)
-- [ ] docker-compose.example.yml을 docker-compose.yml로 복사: app·db, app만 ports "3000:3000", 앱은 컨테이너 안 3000에서 받음, 앱 설정에 localhost:3000 같은 절대 주소 없음
-- [ ] app 말고는 ports·container_name이 없고, 어느 서비스에도 env_file 없음
-- [ ] 환경변수 이름 그대로(RELEASE_ID·SEED_USER_*·AI_GATEWAY_API_KEY), 시드 계정 값은 `${}` 없이 직접 적음
-- [ ] 빈 DB에서 `docker compose up --build`만으로 앱·시드 데이터가 2분 안에 뜸(docker를 못 쓰면 GitHub Actions 결과로 확인)
+- [x] 설계에 맞는 최소 화면과 서버 실행 구성 준비, Dockerfile 작성(빌드는 Dockerfile에서 끝내고 시작 명령은 서버 실행만)
+- [x] docker-compose.example.yml을 docker-compose.yml로 복사: app·db, app만 ports "3000:3000", 앱은 컨테이너 안 3000에서 받음, 앱 설정에 localhost:3000 같은 절대 주소 없음
+- [x] app 말고는 ports·container_name이 없고, 어느 서비스에도 env_file 없음
+- [x] 환경변수 이름 그대로(RELEASE_ID·SEED_USER_*·AI_GATEWAY_API_KEY), 시드 계정 값은 `${}` 없이 직접 적음
+- [x] 빈 DB에서 `docker compose up --build`만으로 앱·시드 데이터가 2분 안에 뜸(docker를 못 쓰면 GitHub Actions 결과로 확인)
 - [ ] README 설치·빌드·실행 안내와 환경변수 표(이름·용도·설정 위치)
 - [ ] GET /__health가 인증·리다이렉트 없이 200 응답(docker 앱·배포 둘 다, Next.js는 app/%5F%5Fhealth), 실제 배포 commit을 releaseId로 제공
 - [ ] 공개 HTTPS URL 첫 배포(발표용, 배포용 DB는 학생 확인 후 무료 등급)
 - [ ] CI 실제 검사(workflows/scenarios.yml 복사)와 성공 뒤 자동 배포 연결, 실제 push로 확인
 - [ ] Agent가 대시보드 배포 URL 저장, UP·배포 commit 일치 확인
-- 배포 URL / CI·배포 링크 / 첫 배포 commit SHA:
+- 배포 URL / CI·배포 링크 / 첫 배포 commit SHA: 배포 미등록. /__health는 docker 앱에서만 200 확인. CI 파일(.github/workflows/scenarios.yml)은 있으나 자동 배포 연결 없음
 
 ## 4. 서비스 AI API 설정 (필요할 때만)
 
@@ -95,7 +96,7 @@
 - [ ] AI 기능은 실제 응답을 기다려 확인, 흐름 하나가 로컬에서 1분 안
 - [ ] viewport를 spec에서 바꾸지 않음, platform의 화면(both면 둘 다)에서 통과
 - [ ] globalSetup·storageState 등 playwright.config.ts에만 있는 설정에 기대지 않음
-- [ ] `docker compose down -v`, `docker compose up -d --build` 뒤 `npx playwright test`로 모든 흐름 통과
+- [x] `docker compose down -v`, `docker compose up -d --build` 뒤 `npx playwright test`로 모든 흐름 통과 (S1~S7, 10/30)
 - 흐름별 E2E 결과(통과 / 실패 단계와 이유):
 
 ## 7. 최종 검증

@@ -17,6 +17,6 @@
     { "id": "sbux-decaf-americano-t", "brand": "스타벅스", "menu": "아이스 아메리카노", "size": "톨", "sizeRank": 1, "caffeineMg": 10, "isDecaf": true, "sourceUrl": null }
   ],
   "cafes": [
-    { "id": "venue", "name": "대회장", "lat": 0, "lng": 0, "radiusM": 50, "_todo": "대회장 실제 좌표로 바꾼다" }
+    { "id": "venue", "name": "대회장", "lat": 35.165706, "lng": 126.907069, "radiusM": 50, "_source": "광주 북구 자미로6번길 45(광주창조경제혁신센터 건물), 카카오맵 주소 검색 좌표" }
   ]
 }

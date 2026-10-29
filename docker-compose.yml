@@ -15,6 +15,8 @@ services:
       SESSION_SECRET: local-docker-session-secret
       SEED_USER_EMAIL: student@example.com
       SEED_USER_PASSWORD: loopthon-2026
+      SEED_TIRED_EMAIL: tired@example.com
+      SEED_TIRED_PASSWORD: loopthon-2026
       AI_GATEWAY_API_KEY: ${AI_GATEWAY_API_KEY:-}
     depends_on:
       db:
