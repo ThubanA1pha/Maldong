@@ -13,8 +13,6 @@ export default function Login() {
         <h2 className="title">이메일로 로그인</h2>
         <AuthForm endpoint="/api/auth/login" submitLabel={BTN.login} next="/home" />
       </section>
-      <p className="muted">카카오로 가입했다면 아래 버튼을 눌러 주세요.</p>
-      <a className="btn" href="/api/auth/kakao">{BTN.kakao}</a>
       <p className="muted">처음 오셨나요?</p>
       <Link className="btn link" href="/signup">{BTN.signup}</Link>
     </main>

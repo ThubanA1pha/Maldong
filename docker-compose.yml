@@ -13,9 +13,6 @@ services:
       DATABASE_URL: postgres://app:app@db:5432/app
       # 로컬 docker 전용 값. 배포 사이트의 실제 계정·비밀값과 다르게 둔다.
       SESSION_SECRET: local-docker-session-secret
-      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID:-}
-      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET:-}
-      KAKAO_REDIRECT_URI: ${KAKAO_REDIRECT_URI:-http://localhost:3000/api/auth/kakao/callback}
       SEED_USER_EMAIL: student@example.com
       SEED_USER_PASSWORD: loopthon-2026
       AI_GATEWAY_API_KEY: ${AI_GATEWAY_API_KEY:-}

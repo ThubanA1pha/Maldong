@@ -7,6 +7,8 @@ export type Option = "full" | "half" | "third" | "original" | "small" | "halfsho
 export type Situation = "have" | "changeable";
 export type SleepAnswer = "great" | "ok" | "tossed" | "barely";
 
+const HOUR_MS = 3_600_000;
+
 export const HALF_LIFE_H: Record<Sensitivity, number> = { dull: 3.5, normal: 5, sensitive: 7 };
 export const BAND_OK_BELOW = 30;
 export const BAND_MID_BELOW = 100;
@@ -21,20 +23,26 @@ export const OPTIONS_BY_SITUATION: Record<Situation, Option[]> = {
   changeable: ["original", "small", "halfshot", "decaf"],
 };
 
-const HOUR_MS = 3_600_000;
-
 export function remaining(doseMg: number, takenAt: Date, at: Date, halfLifeH: number): number {
   const hours = (at.getTime() - takenAt.getTime()) / HOUR_MS;
   if (hours < 0) return 0;
   return doseMg * 0.5 ** (hours / halfLifeH);
 }
 
-// now 이후 가장 가까운 "HH:MM" 시각. 같은 시각이면 다음 날로 본다.
+// 오늘 밤 잘 시각. now 이후 가장 가까운 "HH:MM"이다.
+// 단, 잘 시각이 이미 지났고 지난 지 LATE_HOURS 안이면(예: 01:00 예정인데 지금 01:40) 내일로 넘기지 않고 지금 바로 잔다고 본다.
+export const LATE_HOURS = 8;
 export function nextBedtime(now: Date, hhmm: string): Date {
   const [h, m] = hhmm.split(":").map(Number);
   const t = new Date(now);
   t.setHours(h, m, 0, 0);
-  if (t.getTime() <= now.getTime()) t.setDate(t.getDate() + 1);
+  if (t.getTime() > now.getTime()) {
+    const passed = new Date(t); passed.setDate(passed.getDate() - 1);
+    if (now.getTime() - passed.getTime() < LATE_HOURS * HOUR_MS) return new Date(now);
+    return t;
+  }
+  if (now.getTime() - t.getTime() < LATE_HOURS * HOUR_MS) return new Date(now);
+  t.setDate(t.getDate() + 1);
   return t;
 }
 

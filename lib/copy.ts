@@ -7,7 +7,6 @@ export const SERVICE_NAME = "말똥"; // Figma 로고 (이전: "커피 한 모�
 export const SERVICE_ONE_LINER = "시험 기간, 커피를 마시기 직전에 캐릭터가 오늘 밤 잠에 남을 카페인을 먼저 알려 줘요.";
 
 export const BTN = {
-  kakao: "카카오로 시작하기",
   start: "시작하기",
   login: "로그인",
   signup: "가입하기",

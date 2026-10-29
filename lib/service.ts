@@ -1,7 +1,6 @@
 // [공통] 데이터 처리. 화면과 API는 이 함수만 부른다(Prisma를 직접 부르지 않는다).
 // 시각은 서버의 현재 시각(TZ=Asia/Seoul)을 쓴다.
 import bcrypt from "bcryptjs";
-import { randomUUID } from "node:crypto";
 import { db } from "./db";
 import {
   HALF_LIFE_H, OPTION_FACTOR, OPTIONS_BY_SITUATION, addedAtBedtime, adjustSensitivity, band, nextBedtime, recommend, totalAtBedtime,
@@ -10,23 +9,6 @@ import {
 import { drinkLabel, recordLabel } from "./copy";
 
 export class UserError extends Error {}
-
-// 이메일이 같아도 기존 계정과 자동 연결하지 않는다.
-export async function loginWithKakao(kakaoId: string) {
-  const existing = await db.user.findUnique({ where: { kakaoId } });
-  if (existing) return { userId: existing.id, isNew: false };
-  const user = await db.user.upsert({
-    where: { kakaoId },
-    update: {},
-    create: {
-      kakaoId,
-      email: `${randomUUID()}@kakao.invalid`,
-      passwordHash: await bcrypt.hash(randomUUID(), 10),
-      profile: { create: {} },
-    },
-  });
-  return { userId: user.id, isNew: true };
-}
 
 const startOfToday = (now: Date) => { const d = new Date(now); d.setHours(0, 0, 0, 0); return d; };
 

@@ -13,8 +13,6 @@ export default function Signup() {
         <h2 className="title">이메일로 가입</h2>
         <AuthForm endpoint="/api/auth/signup" submitLabel={BTN.signup} next="/profile?first=1" />
       </section>
-      <p className="muted">카카오 계정으로도 시작할 수 있어요.</p>
-      <a className="btn" href="/api/auth/kakao">{BTN.kakao}</a>
       <p className="muted">이미 가입하셨나요?</p>
       <Link className="btn link" href="/login">{BTN.login}</Link>
     </main>
