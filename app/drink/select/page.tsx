@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent } from "react";
 import { api } from "@/lib/client";
-import { BTN } from "@/lib/copy";
+import { BTN, SERVICE_NAME } from "@/lib/copy";
 import { CharacterFace } from "@/components/Character";
 import { ErrorNotice } from "@/components/ErrorNotice";
 import bellNight from "./assets/bell-night.svg";
@@ -131,7 +131,7 @@ function Select() {
         <img className={s.scene} src={night ? "/home/night.svg" : "/home/day.svg"} alt="" />
         <div className={s.somi} style={{ left: "calc(50% - 45px)", top: 310 }}><CharacterFace band="ok" size={120} /></div>
         <div className={s.brand}>
-          <span className={s.logo}><img src={night ? "/character/head-night.svg" : "/character/head.svg"} alt="" />말똥</span>
+          <span className={s.logo}><img src={night ? "/character/head-night.svg" : "/character/head.svg"} alt="" />{SERVICE_NAME}</span>
           <img src={(night ? bellNight : bellDay).src} alt="" />
         </div>
       </div>

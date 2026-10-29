@@ -44,12 +44,6 @@ export function startOfDayKST(now: Date): Date {
   return new Date(k.getTime() - KST_MS);
 }
 
-// 한국 시간 "HH:MM".
-export function hhmmKST(d: Date): string {
-  const k = new Date(d.getTime() + KST_MS);
-  return `${String(k.getUTCHours()).padStart(2, "0")}:${String(k.getUTCMinutes()).padStart(2, "0")}`;
-}
-
 // 오늘 밤 잘 시각. now 이후 가장 가까운 "HH:MM"(한국 시간)이다.
 // 단, 잘 시각이 이미 지났고 지난 지 LATE_HOURS 안이면(예: 01:00 예정인데 지금 01:40) 내일로 넘기지 않고 지금 바로 잔다고 본다.
 export const LATE_HOURS = 8;
