@@ -1,0 +1,63 @@
+// [공통] 데이터 모양. 바꾸려면 통합 담당에게 요청한다. 필드 뜻은 docs/build_spec.md 4절과 CONTEXT.md.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  profile      Profile?
+  records      Record[]
+}
+
+model Profile {
+  userId            String  @id
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usualBedtime      String  @default("01:00") // "HH:MM"
+  sensitivity       String  @default("normal") // dull | normal | sensitive
+  mismatchDirection String? // worse | better
+  mismatchCount     Int     @default(0)
+}
+
+model Drink {
+  id         String   @id
+  brand      String
+  menu       String
+  size       String
+  sizeRank   Int // 같은 메뉴 안에서 작은 사이즈가 작은 수
+  caffeineMg Int
+  isDecaf    Boolean  @default(false)
+  sourceUrl  String?
+  records    Record[]
+}
+
+model Cafe {
+  id      String @id
+  name    String
+  lat     Float
+  lng     Float
+  radiusM Int    @default(50)
+}
+
+model Record {
+  id               String    @id @default(cuid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  drinkId          String
+  drink            Drink     @relation(fields: [drinkId], references: [id])
+  option           String // full | half | third | original | small | halfshot | decaf | already
+  plannedMg        Int
+  startedAt        DateTime
+  bedtime          String // "HH:MM"
+  predictedBand    String // ok | mid | high
+  confirmedPortion String? // all | half | little | none
+  sleepAnswer      String? // great | ok | tossed | barely
+  answeredAt       DateTime?
+}

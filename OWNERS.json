@@ -1,0 +1,39 @@
+{
+  "_note": "화면 담당표. 화면은 [역산 초안]이며 디자인 프레임이 나오면 통합 담당이 이 표를 고친다. 여기 없는 파일은 lead(통합 담당)만 고친다.",
+  "p1": {
+    "screens": ["① 첫 화면 /", "② 가입 /signup"],
+    "flows": ["S1"],
+    "branch": "p1",
+    "paths": ["app/page.tsx", "app/signup/", "app/api/auth/signup/"]
+  },
+  "p2": {
+    "screens": ["③ 로그인 /login", "④ 프로필 /profile"],
+    "flows": ["S1", "S7(끝)"],
+    "branch": "p2",
+    "paths": ["app/login/", "app/profile/", "app/api/auth/login/", "app/api/auth/logout/", "app/api/profile/"]
+  },
+  "p3": {
+    "screens": ["⑤ 홈 /home", "⑨ 오늘 기록 /today"],
+    "flows": ["S2~S7 시작점", "S6"],
+    "branch": "p3",
+    "paths": ["app/home/", "app/today/", "app/api/home/", "app/api/cafes/", "app/api/records/[id]/"]
+  },
+  "p4": {
+    "screens": ["⑥ 음료 고르기 /drink/select", "⑦ 상황·잘 시각 /drink/situation"],
+    "flows": ["S2", "S3", "S4", "S5"],
+    "branch": "p4",
+    "paths": ["app/drink/select/", "app/drink/situation/", "app/api/drinks/"]
+  },
+  "p5": {
+    "screens": ["⑧ 미리 보기 /drink/preview", "⑩ 확인 질문 /check/[recordId]"],
+    "flows": ["S2", "S3", "S4", "S7"],
+    "branch": "p5",
+    "paths": ["app/drink/preview/", "app/check/", "app/api/preview/", "app/api/checks/"]
+  },
+  "lead": {
+    "screens": ["[공통] 전부", "e2e/scenarios/S1~S7.spec.ts", "merge·모의 채점"],
+    "flows": ["S1~S7"],
+    "branch": "main",
+    "paths": ["*"]
+  }
+}

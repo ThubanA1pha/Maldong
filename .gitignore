@@ -28,3 +28,9 @@ playwright-report/
 .DS_Store
 Thumbs.db
 *.log
+
+# 에이전트 팩·루프 키트 (팀 내부용)
+loopthon-loop/
+SUMTECH_에이전트팩/
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,37 @@
+# [공통] 주최 측 실행과 같은 방식. 서비스 이름 app과 "3000:3000"은 바꾸지 않는다. .env를 쓰지 않는다.
+services:
+  app:
+    build:
+      context: .
+      args:
+        RELEASE_ID: ${RELEASE_ID:-dev}
+    ports:
+      - "3000:3000"
+    environment:
+      RELEASE_ID: ${RELEASE_ID:-dev}
+      TZ: Asia/Seoul
+      DATABASE_URL: postgres://app:app@db:5432/app
+      # 로컬 docker 전용 값. 배포 사이트의 실제 계정·비밀값과 다르게 둔다.
+      SESSION_SECRET: local-docker-session-secret
+      SEED_USER_EMAIL: student@example.com
+      SEED_USER_PASSWORD: loopthon-2026
+      AI_GATEWAY_API_KEY: ${AI_GATEWAY_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

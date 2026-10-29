@@ -1,0 +1,22 @@
+{
+  "_note": "임시값이다. 기획팀이 각 브랜드 공식 홈페이지의 공개 카페인 함량(mg)과 링크(sourceUrl)로 바꾼다. 공개되지 않은 메뉴는 빼거나 sourceUrl을 null로 두고 화면에 '추정'을 표시한다. id는 바꾸지 않는다(시드·테스트가 참조).",
+  "drinks": [
+    { "id": "mega-iced-americano-r", "brand": "메가커피", "menu": "아이스 아메리카노", "size": "레귤러", "sizeRank": 1, "caffeineMg": 150, "sourceUrl": null },
+    { "id": "mega-iced-americano-l", "brand": "메가커피", "menu": "아이스 아메리카노", "size": "라지", "sizeRank": 2, "caffeineMg": 300, "sourceUrl": null },
+    { "id": "mega-latte-r", "brand": "메가커피", "menu": "카페라떼", "size": "레귤러", "sizeRank": 1, "caffeineMg": 150, "sourceUrl": null },
+    { "id": "compose-iced-americano-r", "brand": "컴포즈커피", "menu": "아이스 아메리카노", "size": "레귤러", "sizeRank": 1, "caffeineMg": 200, "sourceUrl": null },
+    { "id": "compose-iced-americano-l", "brand": "컴포즈커피", "menu": "아이스 아메리카노", "size": "라지", "sizeRank": 2, "caffeineMg": 300, "sourceUrl": null },
+    { "id": "compose-latte-r", "brand": "컴포즈커피", "menu": "카페라떼", "size": "레귤러", "sizeRank": 1, "caffeineMg": 200, "sourceUrl": null },
+    { "id": "paik-iced-americano-r", "brand": "빽다방", "menu": "아이스 아메리카노", "size": "레귤러", "sizeRank": 1, "caffeineMg": 160, "sourceUrl": null },
+    { "id": "paik-iced-americano-l", "brand": "빽다방", "menu": "아이스 아메리카노", "size": "라지", "sizeRank": 2, "caffeineMg": 240, "sourceUrl": null },
+    { "id": "paik-latte-r", "brand": "빽다방", "menu": "카페라떼", "size": "레귤러", "sizeRank": 1, "caffeineMg": 160, "sourceUrl": null },
+    { "id": "sbux-iced-americano-t", "brand": "스타벅스", "menu": "아이스 아메리카노", "size": "톨", "sizeRank": 1, "caffeineMg": 150, "sourceUrl": null },
+    { "id": "sbux-iced-americano-g", "brand": "스타벅스", "menu": "아이스 아메리카노", "size": "그란데", "sizeRank": 2, "caffeineMg": 225, "sourceUrl": null },
+    { "id": "sbux-latte-t", "brand": "스타벅스", "menu": "카페라떼", "size": "톨", "sizeRank": 1, "caffeineMg": 75, "sourceUrl": null },
+    { "id": "sbux-latte-g", "brand": "스타벅스", "menu": "카페라떼", "size": "그란데", "sizeRank": 2, "caffeineMg": 150, "sourceUrl": null },
+    { "id": "sbux-decaf-americano-t", "brand": "스타벅스", "menu": "아이스 아메리카노", "size": "톨", "sizeRank": 1, "caffeineMg": 10, "isDecaf": true, "sourceUrl": null }
+  ],
+  "cafes": [
+    { "id": "venue", "name": "대회장", "lat": 0, "lng": 0, "radiusM": 50, "_todo": "대회장 실제 좌표로 바꾼다" }
+  ]
+}
