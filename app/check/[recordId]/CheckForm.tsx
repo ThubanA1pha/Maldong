@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { SleepAnswer } from "@/lib/caffeine";
 import { api } from "@/lib/client";
-import { PORTION_ANSWER, Q, SLEEP_ANSWER } from "@/lib/copy";
+import { CHECK, PORTION_ANSWER, Q, SLEEP_ANSWER } from "@/lib/copy";
 import s from "./check.module.css";
 
 type Portion = keyof typeof PORTION_ANSWER;
@@ -57,10 +57,10 @@ export function CheckForm({ recordId }: { recordId: string }) {
           </div>
         </section>
       ) : (
-        <p className={s.hint}>마신 양을 고르면 잠에 대해 물어볼게요.</p>
+        <p className={s.hint}>{CHECK.afterPortion}</p>
       )}
 
-      {busy ? <p className="muted" role="status">답을 저장하는 중이에요…</p> : null}
+      {busy ? <p className="muted" role="status">{CHECK.saving}</p> : null}
       {error ? <p className="error" role="alert">{error}</p> : null}
     </>
   );
