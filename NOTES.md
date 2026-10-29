@@ -13,6 +13,7 @@
 
 | 시각 | main 커밋 | 바뀐 것 | 해야 할 일 |
 | --- | --- | --- | --- |
+| 10/30 03:53 | `299c4a8` | p4 사람 테스트 반영(✕ 닫기·체크 표시·사이즈 칩 버튼·상황 카드 기본 강조 없앰), p5 배지 잘 시각 기준·"또"는 많이 남았을 때만·⑩ 제목 두 줄·PREVIEW/CHECK/API_ERROR 사용, 팀장 05:00분(삭제 [되돌리기] API·`ERROR_SAY`·`BTN.close`/`undo`·`countNote`·`bedMg`·배포 DB 그란데 정리). ⑥ 충돌은 **p3 끌어서 닫기 + p4 ✕ 닫기 둘 다 둠(팀장 결정: 눌러 보고 하나로 정함)**. 빈 DB E2E 8/8 | 모두: pull → `docker compose down -v` → `up`. ⑥ 닫기 방식은 눌러 보고 피드백. p3: [되돌리기] 버튼 UI |
 | 10/30 03:42 | `187db9e` (04:00 회차) | p3 홈 맨 아래 여백·빈 오늘 기록 링크(`9ed905e`), p3 음료 시트 끌어 닫기(`281c378`), p5 미리 보기 마지막 카드 가림 해소·시작 버튼 모양(`0d9431d`), review 문서 4개(`305df38`까지), 팀장: 단계 색 토큰 진하게, 깨진 JSON 400(profile·records·auth), build_spec을 S1~S8·공식 음료·`Record.option`에 맞춤. 빈 DB E2E S1~S8 8/8 | 점수는 04:00 회차 뒤 기록. 모두: pull → `docker compose down -v` → `up -d --build` |
 | 10/30 03:00 회차 | `0e78340` | **점수: 기획 25.9 · 구현 13.8** (17e746a 대비 +0.3 · −0.5). coldgeon Vercel 배포 워크플로(배포 releaseId = main SHA 해결) | 구현 −0.5 원인 1순위는 화면 겹침 → `187db9e`에서 해결 |
 | 10/30 03시 | `b33fd73` | 통합 #4: review(`9514503`까지)·p3(① 첫 화면)·p4(그림 공통화)·p5(입력 검사·새벽 안내) 합침. **음료 공식 23개 메뉴**(공식 이름·ml, ICE/HOT, 대용량 별도), 시나리오 **S8 추가**·S2/S3 변경(예정 변경 A·B·C·F), 입력 검사 400, **배포에서 `SESSION_SECRET` 없으면 로그인 막음**, 시각 계산을 한국 시간으로 고정, copy.ts에 `PREVIEW`·`CHECK`·`API_ERROR`, 확인 카드에 용량 표시, `Scene`에 `anchor` | **모두: pull 뒤 `docker compose down -v` → `up -d --build`로 새 시드·새 음료를 넣을 것.** 화면에서 음료 이름·용량이 공식 표기로 바뀜. p5: ⑧⑩ 화면 글자를 `PREVIEW`·`CHECK`로. coldgeon: `SESSION_SECRET` 꼭 넣기 |
