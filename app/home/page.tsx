@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { BottomNav } from "@/components/BottomNav";
 import { requireUser } from "@/lib/auth";
-import type { Band } from "@/lib/caffeine";
+import { isPastBedtime, type Band } from "@/lib/caffeine";
 import { BAND_TEXT, BTN, HOME, HOME_LINE, SAY, SENSITIVITY_LABEL, SERVICE_NAME, checkCard, todayLink } from "@/lib/copy";
 import { getProfile, home, listToday } from "@/lib/service";
 import { HomeHero, type Scene } from "./HomeHero";
@@ -60,7 +60,9 @@ async function HomeBody({ userId, notice }: { userId: string; notice?: string })
     sens_up: SAY.sensitiveUp(label),
     sens_down: SAY.sensitiveDown(label),
   };
-  const line = (notice && NOTICE[notice]) || HOME_LINE[data.band](data.usualBedtime);
+  const late = isPastBedtime(new Date(), data.usualBedtime); // 잘 시각이 지난 새벽이면 "지금" 기준으로 말한다
+  const caption = HOME.bedtimeCaption(data.usualBedtime, late);
+  const line = (notice && NOTICE[notice]) || HOME_LINE[data.band](data.usualBedtime, late);
   const last = today[0];
   const [linkPre, linkPost] = todayLink(data.todayCount).split(String(data.todayCount));
   const cups = Math.min(data.todayCount, 3);
@@ -80,10 +82,10 @@ async function HomeBody({ userId, notice }: { userId: string; notice?: string })
           </section>
         ))}
 
-        <section className={s.card} aria-label={HOME.bedtimeCaption(data.usualBedtime)}>
+        <section className={s.card} aria-label={caption}>
           <div className={s.statusRow}>
             <div>
-              <p className={s.cardSub} style={{ margin: 0 }}>{HOME.bedtimeCaption(data.usualBedtime)}</p>
+              <p className={s.cardSub} style={{ margin: 0 }}>{caption}</p>
               <p className={s.bandText} data-testid="home-band">{BAND_TEXT[data.band]}</p>
             </div>
             <span className={`${s.mg} mono`} data-testid="home-bedtime-mg">약 {data.bedtimeMg}mg</span>
