@@ -8,6 +8,7 @@ export default function Login() {
   return (
     <main className="screen">
       <h1 className="title">로그인</h1>
+      <a className="btn" href="/api/auth/kakao">{BTN.kakao}</a>
       <AuthForm endpoint="/api/auth/login" submitLabel={BTN.login} next="/home" />
     </main>
   );

@@ -8,6 +8,7 @@ export default function Signup() {
   return (
     <main className="screen">
       <h1 className="title">가입</h1>
+      <a className="btn" href="/api/auth/kakao">{BTN.kakao}</a>
       <AuthForm endpoint="/api/auth/signup" submitLabel={BTN.signup} next="/profile?first=1" />
     </main>
   );
