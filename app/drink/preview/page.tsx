@@ -5,7 +5,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Scene, TopBar } from "@/components/Scene";
-import { isPastBedtime, type Band, type Option } from "@/lib/caffeine";
+import { type Band, type Option } from "@/lib/caffeine";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import { api } from "@/lib/client";
 import { BAND_TEXT, BTN, HOME, OPTION_LABEL, PREVIEW, SAY } from "@/lib/copy";
 import s from "./preview.module.css";
@@ -14,15 +15,16 @@ type Preview = {
   drink: string;
   estimated: boolean;
   bedtime: string;
+  late: boolean;
   beforeMg: number;
   beforeBand: Band;
   recommend: "full" | "half" | "third" | "stop" | null;
   options: { option: Option; drinkId: string; addedMg: number; totalMg: number; band: Band }[];
 };
 
-// 공통 상단바. 뒤로 가기는 음료 고르기 처음으로 간다(공통 TopBar는 주소로 이동한다).
-function Header() {
-  return <div className={s.topbar}><TopBar title={PREVIEW.title} back="/drink/select?mode=before" /></div>;
+// 직전 입력을 URL에 남겨 직접 열었을 때도 같은 선택에서 다시 시작한다.
+function Header({ back }: { back: string }) {
+  return <div className={s.topbar}><TopBar title={PREVIEW.title} back={back} /></div>;
 }
 
 function PreviewScreen() {
@@ -31,6 +33,8 @@ function PreviewScreen() {
   const drinkId = params.get("drinkId") ?? "";
   const situation = params.get("situation") === "changeable" ? "changeable" : "have";
   const bedtime = params.get("bedtime") ?? "01:00";
+  const mode = params.get("mode") === "cafe" ? "cafe" : "before";
+  const back = drinkId ? `/drink/situation?${new URLSearchParams({ drinkId, situation, bedtime, mode })}` : `/drink/select?mode=${mode}`;
   const [data, setData] = useState<Preview | null>(null);
   const [selected, setSelected] = useState<Option | null>(null);
   const [changed, setChanged] = useState(false);
@@ -40,6 +44,10 @@ function PreviewScreen() {
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
+    setData(null);
+    setChanged(false);
+    setError(null);
     if (!drinkId) {
       setLoadError(PREVIEW.noDrink);
       return;
@@ -47,24 +55,26 @@ function PreviewScreen() {
     setLoadError(null);
     api<Preview>("/api/preview", { body: { drinkId, situation, bedtime } })
       .then((p) => {
+        if (cancelled) return;
         setData(p);
         const first = p.recommend === "stop" ? null : p.recommend ?? p.options[0]?.option ?? null;
         setSelected(first);
       })
-      .catch((e: Error) => setLoadError(e.message));
+      .catch((e: Error) => { if (!cancelled) setLoadError(e.message); });
+    return () => { cancelled = true; };
   }, [drinkId, situation, bedtime, attempt]);
 
   if (!data) {
     return (
       <main className="screen">
-        <Header />
+        <Header back={back} />
         {loadError ? (
           <div className={s.state}>
-            <p className="error" role="alert" style={{ margin: 0 }}>{loadError}</p>
+            <ErrorNotice message={loadError} />
             {drinkId ? (
               <button className="btn" onClick={() => setAttempt((n) => n + 1)}>{PREVIEW.retry}</button>
             ) : (
-              <button className="btn" onClick={() => router.push("/drink/select?mode=before")}>{PREVIEW.pickDrink}</button>
+              <button className="btn" onClick={() => router.push(`/drink/select?mode=${mode}`)}>{PREVIEW.pickDrink}</button>
             )}
           </div>
         ) : (
@@ -85,20 +95,20 @@ function PreviewScreen() {
   // 말풍선은 한 마디만 한다: 처음엔 비교(이미 많이 남았으면 "또 마시는 거야…?"), 선택지를 바꾸면 "다시 계산했어".
   // "또 마시는 거야…?"는 이번 음료를 더하기 전에 이미 많이 남았을 때만 말한다(오늘 0잔이면 큰 음료여도 "또"가 아니다).
   const again = data.beforeBand === "high";
-  const line = changed ? SAY.recalculated : again ? SAY.again : SAY.compare(data.bedtime);
+  const late = data.late;
+  const line = changed ? SAY.recalculated : again ? SAY.again : SAY.compare(data.bedtime, late);
   // 추천 양(오늘 이미 마신 기록까지 더한 계산, lib/service preview)은 말풍선 아래 줄에 따로 둔다.
   // "오늘은 여기까지"는 아래 띠가 말하므로 이 줄에 넣지 않는다. "또"를 말한 경우 비교 문장도 이 줄로 옮긴다.
   const rec = data.recommend && data.recommend !== "stop" ? SAY.recommend(OPTION_LABEL[data.recommend]) : null;
-  const subLine = [!changed && again ? SAY.compare(data.bedtime) : null, rec].filter(Boolean).join(" ");
+  const subLine = [!changed && again ? SAY.compare(data.bedtime, late) : null, rec].filter(Boolean).join(" ");
   // 선택지 사이 차이: 첫 선택지(그대로·원래대로)보다 몇 mg 덜 더해지는지
   const baseMg = data.options[0]?.addedMg ?? 0;
   const band = current?.band ?? data.beforeBand;
   const canSkip = situation === "have";
   // 잘 시각이 이미 지난 새벽이면 계산은 "지금" 기준이다(lib/caffeine nextBedtime). 홈처럼 그 사실을 함께 알린다.
-  const late = isPastBedtime(new Date(), data.bedtime);
 
   async function start() {
-    if (!current) return;
+    if (!current || busy) return;
     setBusy(true);
     setError(null);
     try {
@@ -125,7 +135,7 @@ function PreviewScreen() {
 
   return (
     <main className={`screen ${s.screen}`}>
-      <Header />
+      <Header back={back} />
       <div className={s.scene}><Scene scene="night" height={145} logo={false} band={band} line={line} /></div>
       {subLine ? <p className={s.recLine} role="status">{subLine}</p> : null}
       <p className={s.meta}>
@@ -146,7 +156,7 @@ function PreviewScreen() {
               key={o.option}
               className={s.option}
               aria-pressed={o.option === current?.option}
-              aria-label={`${OPTION_LABEL[o.option]}${isRec ? ` (${PREVIEW.recommendTag})` : ""} · 이 음료로 ${data.bedtime}에 더해지는 카페인 ${o.addedMg}mg · ${BAND_TEXT[o.band]}`}
+              aria-label={`${OPTION_LABEL[o.option]}${isRec ? ` (${PREVIEW.recommendTag})` : ""} · ${PREVIEW.addedCaption(data.bedtime, late)} ${o.addedMg}mg · ${BAND_TEXT[o.band]}`}
               disabled={busy}
               onClick={() => { setSelected(o.option); setChanged(true); setError(null); }}
               data-added-mg={o.addedMg}
@@ -164,7 +174,7 @@ function PreviewScreen() {
                 <span className={s.barFill} style={{ width: `${Math.round((o.addedMg / maxMg) * 100)}%` }} />
               </span>
               <span className={s.optBottom}>
-                <span>이 음료로 {data.bedtime}에 더해지는 카페인 <span className={s.mg}>+{o.addedMg}mg</span></span>
+                <span>{PREVIEW.addedCaption(data.bedtime, late)} <span className={s.mg}>+{o.addedMg}mg</span></span>
                 <span className={`${s.pill} ${s[`pill_${o.band}`]}`}>{BAND_TEXT[o.band]}</span>
               </span>
             </button>
@@ -172,7 +182,7 @@ function PreviewScreen() {
         })}
       </div>
       {!current ? <p className={s.hint}>{stop ? PREVIEW.pickBeforeDrink : PREVIEW.pickOption}</p> : null}
-      {error ? <p className="error" role="alert">{error}</p> : null}
+      {error ? <ErrorNotice message={error} onRetry={start} busy={busy} /> : null}
       <div className="bottom"><div>
         {stop && canSkip ? [skipBtn, startBtn] : [startBtn, skipBtn]}
       </div></div>

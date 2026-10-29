@@ -13,6 +13,10 @@ export const HALF_LIFE_H: Record<Sensitivity, number> = { dull: 3.5, normal: 5, 
 export const BAND_OK_BELOW = 30;
 export const BAND_MID_BELOW = 100;
 
+export function isValidBedtime(value: unknown): value is string {
+  return typeof value === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
 // 선택지가 음료 한 잔의 카페인에 곱하는 값. small·decaf는 다른 음료 행을 쓰므로 1이다.
 export const OPTION_FACTOR: Record<Option, number> = {
   full: 1, half: 1 / 2, third: 1 / 3, original: 1, small: 1, halfshot: 1 / 2, decaf: 1, already: 1,
@@ -84,9 +88,9 @@ export function band(mg: number): Band {
 }
 
 // 이미 음료가 있을 때 권할 양. 잘 때 합계가 100mg 아래에 머무는 가장 큰 양, 없으면 "stop"(오늘은 여기까지).
-export function recommend(totalBeforeMg: number, fullAddedMg: number): "full" | "half" | "third" | "stop" {
+export function recommend(options: readonly { option: Option; totalMg: number }[]): "full" | "half" | "third" | "stop" {
   for (const option of ["full", "half", "third"] as const) {
-    if (totalBeforeMg + fullAddedMg * OPTION_FACTOR[option] < BAND_MID_BELOW) return option;
+    if (options.some((o) => o.option === option && o.totalMg < BAND_MID_BELOW)) return option;
   }
   return "stop";
 }

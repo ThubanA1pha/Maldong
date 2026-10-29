@@ -8,12 +8,13 @@ import { ProfileForm } from "./ProfileForm";
 
 export const dynamic = "force-dynamic";
 
-export default async function Profile() {
+export default async function Profile({ searchParams }: { searchParams: Promise<{ first?: string }> }) {
   const userId = await requireUser();
+  const { first } = await searchParams;
   return (
     <main className={`${s.page} ${s.withNav}`}>
       <TopBar title="프로필" back="/home" />
-      <ProfileForm initial={await getProfile(userId)} />
+      <ProfileForm initial={await getProfile(userId)} first={first === "1"} />
       <BottomNav active="profile" />
     </main>
   );

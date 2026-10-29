@@ -11,9 +11,11 @@ test("S3 비교해 보고 이번에는 마시지 않기로 한다", async ({ pag
   // 5. [바꾸기]를 누른다
   await page.getByRole("button", { name: "바꾸기", exact: true }).click()
   // 6. 잘 시각에서 "00:00"을 고른다
+  const calculation = page.waitForResponse((response) => response.url().endsWith("/api/preview") && response.request().method() === "POST")
   await page.getByRole("group", { name: "잘 시각" }).getByRole("button", { name: "00:00", exact: true }).click()
+  const result = await (await calculation).json()
   // expected: 미리 보기가 00:00 기준으로 다시 계산된다
-  await expect(page.getByText("00시에 남을 양을 같이 비교해 보자.").first()).toBeVisible()
+  await expect(page.getByText(result.late ? "지금 남은 양을 같이 비교해 보자." : "00시에 남을 양을 같이 비교해 보자.").first()).toBeVisible()
   await page.getByRole("button", { name: "이번에는 마시지 않기" }).click()
   await expect(page.getByText("이번 음료는 마신 기록에 넣지 않을게.")).toBeVisible()
   expect(await todayCount(page)).toBe(before)

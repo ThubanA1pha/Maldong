@@ -27,6 +27,9 @@ export const BTN = {
   answer: "답하기",
   cafeLook: "뭐 마실지 볼래",
   undo: "되돌리기",
+  retry: "다시 시도하기",
+  reload: "다시 불러오기",
+  confirmBedtime: "이 시각으로 확인",
   cafeDismiss: "괜찮아",
 } as const;
 
@@ -59,7 +62,11 @@ export const PORTION_ANSWER = { all: "다", half: "반", little: "조금", none:
 export const SLEEP_ANSWER: Record<SleepAnswer, string> = { great: "푹", ok: "그럭저럭", tossed: "뒤척임", barely: "거의 못 잠" };
 
 export const SAY = {
-  compare: (hhmm: string) => `${hhmm.slice(0, 2)}시에 남을 양을 같이 비교해 보자.`,
+  compare: (hhmm: string, late = false) => {
+    if (late) return "지금 남은 양을 같이 비교해 보자.";
+    const time = hhmm.endsWith(":00") ? `${hhmm.slice(0, 2)}시` : hhmm;
+    return `${time}에 남을 양을 같이 비교해 보자.`;
+  },
   recalculated: "바꾼 양으로 다시 계산했어.",
   skipped: "이번 음료는 마신 기록에 넣지 않을게.",
   cafe: "카페 앞이네?",
@@ -102,13 +109,14 @@ export const TODAY = {
 // ①~④ 첫 화면·가입·로그인·프로필 말풍선과 안내
 export const AUTH = {
   landingLine: "안녕! 나는 솜이야.\n네 잠을 지켜 줄게", // Figma 1-1
-  landingTagline: "마시기 전에, 3초만 솜이랑 보자",
+  landingTagline: "오늘 밤 푹 자고 싶다면,\n마시기 전 카페인을 확인해요.",
   signupLine: "반가워!\n이메일이면 충분해",
   loginLine: "다시 왔구나!",
   profileLine: "잘 시각이랑 민감도로\n오늘 밤을 계산해",
   sensitivityHelp: "담배를 피우거나 복용 중인 약이 있으면 카페인이 몸에 남는 시간이 달라질 수 있어요.",
   sensitivityNow: "현재 민감도",
-  saved: "저장했어요",
+  saved: "설정을 저장했어. 오늘 밤을 같이 확인해 보자.",
+  firstProfileLine: "먼저 잘 시각과 민감도를 알려 줘.\n저장하면 오늘 밤을 같이 확인할 수 있어.",
 } as const;
 
 // ⑧ 미리 보기 (p5 요청 문구)
@@ -133,6 +141,12 @@ export const PREVIEW = {
   noDrink: "고른 음료가 없어요. 음료부터 다시 골라 주세요.",
   pickOption: "선택지를 하나 골라 주세요",
   pickBeforeDrink: "그래도 마신다면 선택지를 먼저 골라 주세요",
+  addedCaption: (hhmm: string, late: boolean) => `이 음료로 ${late ? "지금" : `${hhmm}에`} 더해지는 카페인`,
+} as const;
+
+export const SITUATION = {
+  customBedtime: "다른 시각 직접 고르기",
+  customHint: "시각을 고르고 확인하면 그 시각으로 계산해요",
 } as const;
 
 // ⑩ 확인 질문 (p5 요청 문구)

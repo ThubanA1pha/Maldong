@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { db } from "./db";
 import {
-  HALF_LIFE_H, OPTION_FACTOR, startOfDayKST, OPTIONS_BY_SITUATION, addedAtBedtime, adjustSensitivity, band, nextBedtime, recommend, totalAtBedtime,
+  HALF_LIFE_H, OPTION_FACTOR, startOfDayKST, OPTIONS_BY_SITUATION, addedAtBedtime, adjustSensitivity, band, isValidBedtime, nextBedtime, recommend, totalAtBedtime,
   type Band, type Option, type Sensitivity, type Situation, type SleepAnswer,
 } from "./caffeine";
 import { API_ERROR, drinkLabel, recordLabel } from "./copy";
@@ -37,7 +37,7 @@ export async function getProfile(userId: string) {
 }
 
 export async function updateProfile(userId: string, usualBedtime: string, sensitivity: Sensitivity) {
-  if (!/^\d{2}:\d{2}$/.test(usualBedtime)) throw new UserError("잠드는 시각을 골라 주세요.");
+  if (!isValidBedtime(usualBedtime)) throw new UserError(API_ERROR.pickBedtime);
   if (!Object.hasOwn(HALF_LIFE_H, sensitivity)) throw new UserError("민감도를 골라 주세요.");
   await db.profile.update({ where: { userId }, data: { usualBedtime, sensitivity } });
 }
@@ -118,7 +118,7 @@ async function resolveDrink(drinkId: string, option: Option) {
 }
 
 export async function preview(userId: string, drinkId: string, situation: Situation, bedtimeHHMM: string, now = new Date()) {
-  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(bedtimeHHMM)) throw new UserError(API_ERROR.pickBedtime);
+  if (!isValidBedtime(bedtimeHHMM)) throw new UserError(API_ERROR.pickBedtime);
   if (!(await db.drink.findUnique({ where: { id: drinkId } }))) throw new UserError(API_ERROR.unknownDrink);
   const profile = await getProfile(userId);
   const hl = HALF_LIFE_H[profile.sensitivity];
@@ -130,24 +130,25 @@ export async function preview(userId: string, drinkId: string, situation: Situat
   for (const option of OPTIONS_BY_SITUATION[situation]) {
     const d = await resolveDrink(drinkId, option);
     if (!d) continue; // 작은 사이즈·디카페인이 없는 메뉴는 숨긴다
-    const added = addedAtBedtime(d.caffeineMg * OPTION_FACTOR[option], now, bed, hl);
+    const plannedMg = Math.round(d.caffeineMg * OPTION_FACTOR[option]);
+    const added = addedAtBedtime(plannedMg, now, bed, hl);
     options.push({ option, drinkId: d.id, addedMg: added, totalMg: before + added, band: band(before + added) });
   }
-  const fullAdded = addedAtBedtime(base.caffeineMg, now, bed, hl);
   return {
     drink: drinkLabel(base),
     estimated: !base.sourceUrl,
     bedtime: bedtimeHHMM,
+    late: bed.getTime() === now.getTime(),
     beforeMg: before,
     beforeBand: band(before),
-    recommend: situation === "have" ? recommend(before, fullAdded) : null,
+    recommend: situation === "have" ? recommend(options) : null,
     options,
   };
 }
 
 export async function createRecord(userId: string, input: { drinkId: string; option: Option; bedtime: string }, now = new Date()) {
   if (!Object.hasOwn(OPTION_FACTOR, input.option)) throw new UserError(API_ERROR.pickOption);
-  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(input.bedtime)) throw new UserError(API_ERROR.pickBedtime);
+  if (!isValidBedtime(input.bedtime)) throw new UserError(API_ERROR.pickBedtime);
   if (!(await db.drink.findUnique({ where: { id: input.drinkId } }))) throw new UserError(API_ERROR.unknownDrink);
   const profile = await getProfile(userId);
   const hl = HALF_LIFE_H[profile.sensitivity];

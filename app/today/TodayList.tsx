@@ -3,10 +3,12 @@
 // 브라우저 confirm을 쓰지 않는다. 지운 뒤 목록은 서버에서 다시 받아 잔 수와 함께 맞춘다.
 // 줄마다 음료 이름과 양을 두 줄로 보이되, 글자로는 "{음료} · {양}" 한 덩어리로 읽히게 둔다(E2E·화면 읽기 프로그램).
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CharacterFace } from "@/components/Character";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import { api } from "@/lib/client";
-import { BTN, Q, SAY, TODAY } from "@/lib/copy";
+import { API_ERROR, BTN, ERROR_SAY, Q, SAY, TODAY } from "@/lib/copy";
 import s from "./today.module.css";
 
 export type Item = { id: string; label: string; startedAt: string };
@@ -20,14 +22,18 @@ function splitLabel(label: string) {
 }
 
 export function TodayList({ initial }: { initial: Item[] }) {
+  const router = useRouter();
   const [items, setItems] = useState<Item[]>(initial);
   const [confirming, setConfirming] = useState<Item | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [deleted, setDeleted] = useState<Item | null>(null);
+  const [retryRestore, setRetryRestore] = useState(false);
   const noRef = useRef<HTMLButtonElement>(null);
 
   async function reload() {
+    setRetryRestore(false);
     try {
       setItems(await api<Item[]>("/api/records"));
       setError(null);
@@ -37,16 +43,45 @@ export function TodayList({ initial }: { initial: Item[] }) {
   }
 
   async function remove(item: Item) {
+    if (busy) return;
     setBusy(true);
     setError(null);
+    setRetryRestore(false);
     try {
       await api(`/api/records/${item.id}`, { method: "DELETE" });
       setItems((prev) => prev.filter((it) => it.id !== item.id));
       setConfirming(null);
       setMessage(SAY.deleted);
+      setDeleted(item);
       await reload();
+      router.refresh();
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function restore() {
+    if (!deleted || busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await api(`/api/records/${deleted.id}/restore`, { method: "POST" });
+      setItems((prev) => [...prev.filter((it) => it.id !== deleted.id), deleted].sort((a, b) => b.startedAt.localeCompare(a.startedAt)));
+      setDeleted(null);
+      setMessage(ERROR_SAY.restored);
+      await reload();
+      router.refresh();
+    } catch (e) {
+      const message = (e as Error).message;
+      setError(message);
+      setRetryRestore(true);
+      if (message === API_ERROR.cannotRestore) {
+        setDeleted(null);
+        setMessage(null);
+        setRetryRestore(false);
+      }
     } finally {
       setBusy(false);
     }
@@ -61,10 +96,10 @@ export function TodayList({ initial }: { initial: Item[] }) {
   }, [confirming, busy]);
 
   useEffect(() => {
-    if (!message) return;
+    if (!message || deleted) return;
     const t = setTimeout(() => setMessage(null), 2500);
     return () => clearTimeout(t);
-  }, [message]);
+  }, [message, deleted]);
 
   const [countPre, countPost] = TODAY.count(items.length).split(String(items.length));
 
@@ -80,13 +115,13 @@ export function TodayList({ initial }: { initial: Item[] }) {
         <CharacterFace band="ok" size={56} />
       </section>
 
-      {message ? <p className={s.toast} role="status">{message}</p> : null}
-      {error ? (
-        <div className={s.errorBox} role="alert">
-          <p className="error" style={{ margin: 0 }}>{error}</p>
-          <button className={s.cancel} type="button" onClick={reload}>다시 불러오기</button>
+      {message ? (
+        <div className={s.toast} role="status">
+          <span>{message}</span>
+          {deleted ? <button className={s.cancel} type="button" disabled={busy} onClick={restore}>{BTN.undo}</button> : null}
         </div>
       ) : null}
+      {error && !confirming ? <ErrorNotice message={error} onRetry={retryRestore ? restore : reload} busy={busy} /> : null}
 
       {items.length === 0 ? (
         <div className={s.empty}>
@@ -136,6 +171,7 @@ export function TodayList({ initial }: { initial: Item[] }) {
               <br />
               {TODAY.deleteNote}
             </p>
+            {error ? <ErrorNotice message={error} /> : null}
             <div className={s.sheetBtns}>
               <button ref={noRef} className="btn" type="button" disabled={busy} onClick={() => setConfirming(null)}>{BTN.no}</button>
               <button className="btn primary" type="button" disabled={busy} aria-busy={busy} onClick={() => remove(confirming)}>{BTN.confirmDelete}</button>

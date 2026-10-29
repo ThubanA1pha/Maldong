@@ -11,6 +11,7 @@ import { Suspense, useEffect, useMemo, useRef, useState, type PointerEvent as RP
 import { api } from "@/lib/client";
 import { BTN } from "@/lib/copy";
 import { CharacterFace } from "@/components/Character";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import bellNight from "./assets/bell-night.svg";
 import bellDay from "./assets/bell-day.svg";
 import check from "./assets/check.svg";
@@ -24,12 +25,15 @@ const rank = (b: string) => (BRAND_ORDER.indexOf(b) + BRAND_ORDER.length + 1) % 
 
 function Select() {
   const router = useRouter();
-  const mode = useSearchParams().get("mode") ?? "before";
+  const params = useSearchParams();
+  const mode = params.get("mode") ?? "before";
+  const previousDrink = params.get("drinkId");
   const [drinks, setDrinks] = useState<Drink[] | null>(null);
   const [menu, setMenu] = useState<string | null>(null);
   const [picked, setPicked] = useState<Drink | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [night, setNight] = useState(true);
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -70,9 +74,17 @@ function Select() {
   });
 
   useEffect(() => {
+    let cancelled = false;
     setNight(isNight(new Date()));
-    api<Drink[]>("/api/drinks").then(setDrinks).catch((e: Error) => setError(e.message));
-  }, []);
+    setError(null);
+    api<Drink[]>("/api/drinks").then((data) => {
+      if (cancelled) return;
+      setDrinks(data);
+      const previous = data.find((d) => d.id === previousDrink);
+      if (previous) { setMenu(`${previous.brand} ${previous.menu}`); setPicked(previous); setActiveBrand(previous.brand); }
+    }).catch((e: Error) => { if (!cancelled) setError(e.message); });
+    return () => { cancelled = true; };
+  }, [attempt, previousDrink]);
   const brands = useMemo(() => [...new Set((drinks ?? []).map((d) => d.brand))].sort((a, b) => rank(a) - rank(b)), [drinks]);
   const menusOf = (b: string) => [...new Set((drinks ?? []).filter((d) => d.brand === b).map((d) => d.menu))];
   const sizes = (drinks ?? []).filter((d) => `${d.brand} ${d.menu}` === menu);
@@ -156,7 +168,7 @@ function Select() {
         {mode === "already" ? <p className={s.sub}>다 마신 것으로 저장돼요</p> : null}
 
         {!drinks ? (
-          error ? <p className={s.error} role="alert">{error}</p> : <p className={s.status}>음료를 불러오는 중이에요…</p>
+          error ? <ErrorNotice message={error} onRetry={() => setAttempt((n) => n + 1)} /> : <p className={s.status}>음료를 불러오는 중이에요…</p>
         ) : drinks.length === 0 ? (
           <p className={s.status}>고를 수 있는 음료가 아직 없어요</p>
         ) : (
@@ -198,7 +210,7 @@ function Select() {
           </>
         )}
 
-        {drinks && error ? <p className={s.error} role="alert">{error}</p> : null}
+        {drinks && error ? <ErrorNotice message={error} onRetry={mode === "already" ? recordAlready : () => setAttempt((n) => n + 1)} busy={busy} /> : null}
         {mode === "already" ? (
           <button className={s.primary} disabled={!picked || busy} onClick={recordAlready}>{busy ? "기록하는 중…" : BTN.record}</button>
         ) : null}

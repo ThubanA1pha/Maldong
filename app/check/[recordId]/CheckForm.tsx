@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { SleepAnswer } from "@/lib/caffeine";
 import { api } from "@/lib/client";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import { CHECK, PORTION_ANSWER, Q, SLEEP_ANSWER } from "@/lib/copy";
 import s from "./check.module.css";
 
@@ -27,7 +28,6 @@ export function CheckForm({ recordId }: { recordId: string }) {
       router.replace(`/home?notice=${r.moved === "up" ? "sens_up" : r.moved === "down" ? "sens_down" : "checked"}`);
     } catch (e) {
       setError((e as Error).message);
-      setSleep(null);
       setBusy(false);
     }
   }
@@ -38,7 +38,7 @@ export function CheckForm({ recordId }: { recordId: string }) {
         <h2 className={s.q} id="q-portion">{Q.howMuch}</h2>
         <div className={s.seg} role="group" aria-label="마신 양">
           {(Object.keys(PORTION_ANSWER) as Portion[]).map((p) => (
-            <button key={p} className={s.segBtn} aria-pressed={p === portion} disabled={busy} onClick={() => { setPortion(p); setError(null); }}>
+            <button key={p} className={s.segBtn} aria-pressed={p === portion} disabled={busy} onClick={() => { setPortion(p); setSleep(null); setError(null); }}>
               {PORTION_ANSWER[p]}
             </button>
           ))}
@@ -61,7 +61,7 @@ export function CheckForm({ recordId }: { recordId: string }) {
       )}
 
       {busy ? <p className="muted" role="status">{CHECK.saving}</p> : null}
-      {error ? <p className="error" role="alert">{error}</p> : null}
+      {error ? <ErrorNotice message={error} onRetry={sleep ? () => answer(sleep) : undefined} busy={busy} /> : null}
     </>
   );
 }

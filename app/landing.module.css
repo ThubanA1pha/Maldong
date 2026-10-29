@@ -50,6 +50,7 @@
   text-align: center;
   word-break: keep-all;
   text-wrap: balance;
+  white-space: pre-line;
 }
 
 /* ---- 초원: 화면 아래 끝까지 채운다. 솜이는 언덕 위에 선다 ---- */

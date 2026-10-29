@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { BottomNav } from "@/components/BottomNav";
 import { requireUser } from "@/lib/auth";
 import { isPastBedtime, type Band } from "@/lib/caffeine";
-import { BAND_TEXT, BTN, HOME, HOME_LINE, SAY, SENSITIVITY_LABEL, SERVICE_NAME, checkCard, todayLink } from "@/lib/copy";
+import { AUTH, BAND_TEXT, BTN, HOME, HOME_LINE, SAY, SENSITIVITY_LABEL, SERVICE_NAME, checkCard, todayLink } from "@/lib/copy";
 import { getProfile, home, listToday } from "@/lib/service";
 import { HomeHero, type Scene } from "./HomeHero";
 import s from "./home.module.css";
@@ -54,6 +54,7 @@ async function HomeBody({ userId, notice }: { userId: string; notice?: string })
   const [data, profile, today] = await Promise.all([home(userId), getProfile(userId), listToday(userId)]);
   const label = SENSITIVITY_LABEL[profile.sensitivity];
   const NOTICE: Record<string, string> = {
+    saved: AUTH.saved,
     recorded: SAY.recorded,
     skipped: SAY.skipped,
     checked: SAY.thanks,

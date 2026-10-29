@@ -6,7 +6,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { api } from "@/lib/client";
-import { BTN, Q, bedtimeButton, drinkLabel } from "@/lib/copy";
+import { isValidBedtime } from "@/lib/caffeine";
+import { BTN, Q, SITUATION, bedtimeButton, drinkLabel } from "@/lib/copy";
+import { ErrorNotice } from "@/components/ErrorNotice";
 import back from "./assets/back.svg";
 import sceneSituation from "./assets/scene-situation.svg";
 import sceneBedtime from "./assets/scene-bedtime.svg";
@@ -24,19 +26,34 @@ function Situation() {
   const router = useRouter();
   const params = useSearchParams();
   const drinkId = params.get("drinkId") ?? "";
-  const mode = params.get("mode");
-  const [situation, setSituation] = useState<"have" | "changeable" | null>(mode === "cafe" ? "changeable" : null);
-  const [bedtime, setBedtime] = useState<string | null>(null);
+  const mode = params.get("mode") === "cafe" ? "cafe" : "before";
+  const previousSituation = params.get("situation");
+  const previousBedtime = params.get("bedtime");
+  const [situation, setSituation] = useState<"have" | "changeable" | null>(mode === "cafe" ? "changeable" : previousSituation === "have" || previousSituation === "changeable" ? previousSituation : null);
+  const [bedtime, setBedtime] = useState<string | null>(isValidBedtime(previousBedtime) ? previousBedtime : null);
+  const [customBedtime, setCustomBedtime] = useState<string | null>(null);
   const [drink, setDrink] = useState<Drink | null>(null);
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    api<{ usualBedtime: string }>("/api/profile").then((p) => setBedtime(p.usualBedtime)).catch((e: Error) => setError(e.message));
-    api<Drink[]>("/api/drinks").then((ds) => setDrink(ds.find((d) => d.id === drinkId) ?? null)).catch(() => {});
-  }, [drinkId]);
-  const go = (b: string) => router.push(`/drink/preview?drinkId=${drinkId}&situation=${situation}&bedtime=${b}`);
-  const goBack = () => (situation && mode !== "cafe" ? setSituation(null) : router.back());
+    let cancelled = false;
+    setError(null);
+    Promise.all([api<{ usualBedtime: string }>("/api/profile"), api<Drink[]>("/api/drinks")])
+      .then(([profile, drinks]) => {
+        if (cancelled) return;
+        setBedtime((current) => current ?? profile.usualBedtime);
+        setDrink(drinks.find((d) => d.id === drinkId) ?? null);
+      })
+      .catch((e: Error) => { if (!cancelled) setError(e.message); });
+    return () => { cancelled = true; };
+  }, [drinkId, attempt]);
+  const go = (b: string) => {
+    if (!situation || !isValidBedtime(b)) return;
+    router.push(`/drink/preview?${new URLSearchParams({ drinkId, situation, bedtime: b, mode })}`);
+  };
+  const goBack = () => (situation && mode !== "cafe" ? setSituation(null) : router.push(`/drink/select?${new URLSearchParams({ mode, drinkId })}`));
 
   const top = (
     <div className={s.top}>
@@ -83,23 +100,29 @@ function Situation() {
         <div className={s.bubble} style={{ left: 40, top: 56 }}><Bubble>{Q.bedtime}</Bubble></div>
         <SleepySomi />
       </div>
+      {error ? <div className={s.actions}><ErrorNotice message={error} onRetry={() => setAttempt((n) => n + 1)} /></div> : null}
       {!bedtime ? (
-        error ? <p className={s.error} role="alert">{error}</p> : <p className={s.status}>불러오는 중이에요…</p>
+        !error ? <p className={s.status}>불러오는 중이에요…</p> : null
       ) : (
         <div className={s.actions}>
           <button className={`${s.btn} ${s.btnPrimary}`} aria-label={bedtimeButton(bedtime)} onClick={() => go(bedtime)}>
             오늘도 <span className={s.num}>{bedtime}</span>
           </button>
           {editing ? (
-            <div className={s.times} role="group" aria-label="잘 시각">
-              {BEDTIMES.map((t) => (
-                <button key={t} className={s.time} aria-pressed={t === bedtime} onClick={() => go(t)}>{t}</button>
-              ))}
+            <div role="group" aria-label="잘 시각" className={s.timeEditor}>
+              <div className={s.times}>
+                {BEDTIMES.map((t) => (
+                  <button key={t} className={s.time} aria-pressed={t === bedtime} onClick={() => go(t)}>{t}</button>
+                ))}
+              </div>
+              <label htmlFor="custom-bedtime" className={s.hint}>{SITUATION.customBedtime}</label>
+              <input id="custom-bedtime" className={s.timeInput} type="time" value={customBedtime ?? bedtime} onChange={(e) => setCustomBedtime(e.target.value)} />
+              <button className={`${s.btn} ${s.btnPrimary}`} disabled={!isValidBedtime(customBedtime ?? bedtime)} onClick={() => go(customBedtime ?? bedtime)}>{BTN.confirmBedtime}</button>
             </div>
           ) : (
             <button className={`${s.btn} ${s.btnSoft}`} onClick={() => setEditing(true)}>{BTN.changeBedtime}</button>
           )}
-          <p className={s.hint}>{editing ? "고르면 그 시각으로 바로 계산해요" : "프로필의 평소 잠드는 시각이 미리 채워져 있어요"}</p>
+          <p className={s.hint}>{editing ? SITUATION.customHint : "프로필의 평소 잠드는 시각이 미리 채워져 있어요"}</p>
         </div>
       )}
     </main>

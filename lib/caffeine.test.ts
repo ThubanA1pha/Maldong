@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addedAtBedtime, adjustSensitivity, band, isPastBedtime, nextBedtime, recommend, remaining, totalAtBedtime } from "./caffeine";
+import { addedAtBedtime, adjustSensitivity, band, isPastBedtime, isValidBedtime, nextBedtime, recommend, remaining, totalAtBedtime } from "./caffeine";
 
 const at = (s: string) => new Date(`${s}+09:00`); // 한국 시간으로 읽는다(서버 시간대와 무관)
 
@@ -55,14 +55,23 @@ describe("band and recommend", () => {
     expect(band(100)).toBe("high");
   });
   it("recommends the largest portion under 100mg", () => {
-    expect(recommend(20, 60)).toBe("full");
-    expect(recommend(20, 120)).toBe("half");
-    expect(recommend(20, 200)).toBe("third");
-    expect(recommend(90, 60)).toBe("stop");
+    expect(recommend([{ option: "full", totalMg: 80 }])).toBe("full");
+    expect(recommend([{ option: "third", totalMg: 60 }, { option: "half", totalMg: 80 }, { option: "full", totalMg: 140 }])).toBe("half");
+    expect(recommend([{ option: "full", totalMg: 139 }, { option: "half", totalMg: 110 }, { option: "third", totalMg: 100 }])).toBe("stop");
+    expect(recommend([{ option: "full", totalMg: 140 }, { option: "half", totalMg: 110 }, { option: "third", totalMg: 99 }])).toBe("third");
   });
   it("totals several records", () => {
     const bed = at("2026-10-30T01:00:00");
     expect(totalAtBedtime([{ mg: 200, startedAt: at("2026-10-29T20:00:00") }, { mg: 100, startedAt: at("2026-10-29T20:00:00") }], bed, 5)).toBe(150);
+  });
+});
+
+describe("isValidBedtime", () => {
+  it.each(["99:99", "24:00", "12:60", "1:00", "", null])("rejects invalid time %s", (time) => {
+    expect(isValidBedtime(time)).toBe(false);
+  });
+  it.each(["00:00", "04:30", "23:59"])("accepts time %s", (time) => {
+    expect(isValidBedtime(time)).toBe(true);
   });
 });
 
