@@ -3,8 +3,8 @@
 ## 현재 상태
 
 - 실제 서비스 저장소 폴더: C:\loopthon\Maldong (안내 키트는 C:\loopthon\loopthon-starter)
-- 현재 단계 / 다음 행동: 1단계 완료. 학생이 이어 가자고 하면 2단계(종이 문제정의 기록 받기)
-- 학생에게 확인할 내용: 2단계 시작 시 종이 기록(채팅으로 옮겨 적기 또는 사진)
+- 현재 단계 / 다음 행동: 2단계 진행 중. 종이 캔버스 앞면을 docs/problem.yaml로 옮겨 push(d5eba92). 대시보드 표시 확인 대기 → 2-A 문제 다지기
+- 학생에게 확인할 내용: 우리 팀 → 문제 정의 화면에 캔버스가 보이는지. 고객 칸(중학생~대학생/성인/공통)과 문제정의 문장(대학생)의 대상 범위
 - 이 컴퓨터 상태: GitHub CLI 설치함. Docker 미설치(3단계 전에 필요)
 
 ## 1. GitHub 준비
@@ -23,8 +23,8 @@
 
 ## 2. 문제정의 기록 → 문제 다지기 → 해법 찾기 → 기능 명세
 
-- [ ] 종이 기록 수령(학생이 채팅에 옮겨 적거나 사진 첨부)
-- [ ] problem.example.yaml을 참고해 docs/problem.yaml 작성
+- [x] 종이 기록 수령(학생이 채팅에 옮겨 적거나 사진 첨부)
+- [x] problem.example.yaml을 참고해 docs/problem.yaml 작성
 - [ ] 원문 의도와 불명확한 내용 확인, 없는 근거는 빈칸 유지
 - [ ] 2-A 문제 다지기: 캔버스 칸을 질문으로 다짐(Agent가 해법·후보·예시 답을 먼저 내지 않음, 학생 답이 없는 칸은 "학생 답 대기")
 - [ ] 팀원 경험을 언제·어떤 장면·어떻게 대응했는지까지 experiences에 기록
@@ -41,7 +41,7 @@
 - [ ] 사용자 핵심 흐름 3~8개를 scenarios.example.yaml 참고해 docs/scenarios.yaml에 작성(steps는 화면의 메뉴·버튼 이름으로 한 줄에 한 동작, 로그인 흐름은 account 지정), YAML 파서로 형식 확인 후 기본 브랜치 push
 - [ ] 서비스의 AI 호출 필요 여부 확인
 - [ ] README 등 기존 문서에 확인된 구현 설계 기록, 기본 브랜치 push
-- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸:
+- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸: https://github.com/ThubanA1pha/Maldong/blob/main/docs/problem.yaml / d5eba92cbca71a80a23d3764c8c53bf6a7df7d4c / 비어 있음: five_whys(뒷면), experiences, sources, why_ours, solution_paths, insight, features. 근본 문제의 Juliano & Griffiths(2004)는 열어 본 링크 없음
 
 ## 3. 최소 화면 docker 실행·CI·첫 배포
 
