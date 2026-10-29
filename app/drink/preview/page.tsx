@@ -1,9 +1,10 @@
 "use client";
-// 담당: ⑧ 미리 보기 (F2·F3 · S2~S4). 피그마 3-4 · 3-4b · 3-4c 프레임 기준.
+// 담당: ⑧ 미리 보기 (F2·F3 · S2~S4·S8). 피그마 3-4 · 3-4b · 3-4c 프레임 기준.
+// 말풍선은 항상 "{시}시에 남을 양을 같이 비교해 보자"와 추천 양(또는 "오늘은 여기까지")을 함께 말한다(예정 변경 A·B).
 // 고정 문구(lib/copy.ts)와 버튼 이동은 바꾸지 않는다. 비교는 저장하지 않고, [이 양으로 마시기 시작]을 눌러야 기록한다.
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { Character } from "@/components/Character";
+import { Bubble, CharacterFace } from "@/components/Character";
 import type { Band, Option } from "@/lib/caffeine";
 import { api } from "@/lib/client";
 import { BAND_TEXT, BTN, OPTION_LABEL, SAY } from "@/lib/copy";
@@ -42,9 +43,9 @@ function Header({ onBack }: { onBack: () => void }) {
 function Scene({ band, line }: { band: Band; line: string }) {
   return (
     <div className={s.scene}>
-      <span className={s.moon} aria-hidden />
-      <p className={s.bubble} role="status">{line}</p>
-      <div className={s.char}><Character band={band} /></div>
+      <img className={s.bg} src="/home/night.svg" alt="" />
+      <div className={s.talk}><Bubble>{line}</Bubble></div>
+      <div className={s.char}><CharacterFace band={band} size={92} /></div>
     </div>
   );
 }
@@ -108,13 +109,11 @@ function PreviewScreen() {
   const stop = data.recommend === "stop";
   const current = data.options.find((o) => o.option === selected) ?? null;
   const maxMg = Math.max(1, ...data.options.map((o) => o.addedMg));
-  const hour = `${data.bedtime.slice(0, 2)}시`;
-  const rec = data.recommend && data.recommend !== "stop" ? SAY.recommend(OPTION_LABEL[data.recommend]) : null;
-  const line = changed
-    ? SAY.recalculated
-    : stop
-      ? `${SAY.again} 지금도 ${hour}에 많이 남아. ${SAY.recommendStop} 어때?`
-      : [SAY.compare(data.bedtime), rec].filter(Boolean).join(" ");
+  // 추천 양은 오늘 이미 마신 기록까지 더한 계산(lib/service preview)에서 온다. 선택지를 바꿔도 말풍선에 남긴다.
+  const rec = data.recommend === "stop" ? SAY.recommendStop : data.recommend ? SAY.recommend(OPTION_LABEL[data.recommend]) : null;
+  const line = (changed ? [SAY.recalculated, rec] : [stop ? SAY.again : null, SAY.compare(data.bedtime), rec])
+    .filter(Boolean)
+    .join(" ");
   const band = current?.band ?? data.beforeBand;
   const canSkip = situation === "have";
 
@@ -175,11 +174,11 @@ function PreviewScreen() {
                 {isRec ? <span className={s.recBadge}>추천 양</span> : null}
                 <span className={s.radio} aria-hidden />
               </span>
-              <span className={s.optSub} style={{ display: "block" }}>
+              <span className={s.optSub}>
                 {o.option === "original" ? data.drink : OPTION_SUB[o.option]}
               </span>
-              <span className={s.bar} style={{ display: "block" }} aria-hidden>
-                <span className={s.barFill} style={{ display: "block", width: `${Math.round((o.addedMg / maxMg) * 100)}%` }} />
+              <span className={s.bar} aria-hidden>
+                <span className={s.barFill} style={{ width: `${Math.round((o.addedMg / maxMg) * 100)}%` }} />
               </span>
               <span className={s.optBottom}>
                 <span>이 음료로 {data.bedtime}에 더해지는 카페인 <span className={s.mg}>+{o.addedMg}mg</span></span>

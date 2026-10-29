@@ -1,7 +1,7 @@
 // 담당: ⑩ 확인 질문 (F6 · S7). 피그마 4-5 프레임 기준.
 // 고정 문구(lib/copy.ts)와 버튼 이동은 바꾸지 않는다. 답하면 홈으로 돌아가 캐릭터가 결과를 말한다.
 import Link from "next/link";
-import { Character } from "@/components/Character";
+import { Bubble, CharacterFace } from "@/components/Character";
 import { requireUser } from "@/lib/auth";
 import { home } from "@/lib/service";
 import { CheckForm } from "./CheckForm";
@@ -23,10 +23,9 @@ export default async function Check({ params }: { params: Promise<{ recordId: st
       </div>
 
       <div className={s.scene}>
-        <span className={s.sun} aria-hidden />
-        <span className={s.hill} aria-hidden />
-        <div className={s.char}><Character band="high" /></div>
-        <p className={s.bubble}>{pending ? "하나씩 물어볼게" : "이 기록은 이미 답했거나 찾을 수 없어요."}</p>
+        <img className={s.bg} src="/home/day.svg" alt="" />
+        <div className={s.char}><CharacterFace band="mid" mood="tired" size={92} /></div>
+        <div className={s.talk}><Bubble>{pending ? "하나씩 물어볼게" : "이 기록은 이미 답했거나 찾을 수 없어요."}</Bubble></div>
       </div>
 
       {pending ? (
