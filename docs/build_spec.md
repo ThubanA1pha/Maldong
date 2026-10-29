@@ -65,7 +65,7 @@ OWNERS.json, scripts/check-scope.mjs [공통] 담당표와 범위 검사
 | ⑥ | 음료 고르기 | `/drink/select?mode=before\|already\|cafe` | F2·F3·F4 | S2~S5 | 브랜드별 공식 메뉴 목록("메가커피 메가리카노 (ICE)" 형식), 용량 칩("946ml" 형식). already 모드면 [기록하기]. [닫기](✕) → ⑤ 홈 | `GET /api/drinks`, already 모드 `POST /api/records` |
 | ⑦ | 상황·잘 시각 | `/drink/situation` | F2 | S2~S4 | [이미 음료가 있어요] / [아직 바꿀 수 있어요] (cafe 모드면 바꿀 수 있음으로 건너뜀), "이번에는 몇 시에 잘 예정이야?" + [오늘도 01:00] / [바꾸기] | 없음 |
 | ⑧ | 미리 보기 | `/drink/preview` | F2·F3 | S2~S4 | 캐릭터 반응, 선택지 카드([이미 음료가 있어요]: 그대로 / 반만 / 3분의 1만, [아직 바꿀 수 있어요]: 원래대로 / 작은 사이즈 / 하프샷 / 디카페인 중 데이터에 있는 것. 카드마다 "이 음료로 01:00에 더해지는 카페인 Nmg"과 구간), 추천 표시(추천 양 배지, 없으면 "추천 양 · 오늘은 여기까지" 띠와 "{잘 시각}에 남을 카페인 Nmg"), [이 양으로 마시기 시작], [이번에는 마시지 않기]([이미 음료가 있어요]일 때) | `POST /api/preview`(저장 없음), `POST /api/records` |
-| ⑨ | 오늘 기록 | `/today` | F5 | S6 | 오늘 기록 목록(음료·사이즈·양·시각), 줄마다 [취소] → 화면 안 확인 "이 기록을 지울까?" [지우기] / [아니]. 지운 기록은 30분 안에 되살릴 수 있다 | `GET /api/records?day=today`, `DELETE /api/records/:id`, `POST /api/records/:id/restore` |
+| ⑨ | 오늘 기록 | `/today` | F5 | S6 | 오늘 기록 목록(음료·사이즈·양·시각), 줄마다 [취소] → 화면 안 확인 "이 기록을 지울까?" [지우기] / [아니] | `GET /api/records?day=today`, `DELETE /api/records/:id`, `POST /api/records/:id/restore` |
 | ⑩ | 확인 질문 | `/check/[recordId]` | F6 | S7 | "아까 커피 얼마나 마셨어?" [다] [반] [조금] [안 마심] → "잘 잤어?" [푹] [그럭저럭] [뒤척임] [거의 못 잠] → 결과 말풍선 → 홈 | `POST /api/checks` |
 
 ## 3. 계산 규칙 `lib/caffeine.ts` [공통, 단위 테스트 필수]

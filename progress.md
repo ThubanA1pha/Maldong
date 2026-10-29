@@ -56,7 +56,7 @@
 - [x] 공개 HTTPS URL 첫 배포(발표용, 배포용 DB는 학생 확인 후 무료 등급)
 - [ ] CI 실제 검사(workflows/scenarios.yml 복사)와 성공 뒤 자동 배포 연결, 실제 push로 확인
 - [ ] Agent가 대시보드 배포 URL 저장, UP·배포 commit 일치 확인
-- 배포 URL / CI·배포 링크 / 첫 배포 commit SHA: 배포 미등록. /__health는 docker 앱에서만 200 확인. CI 파일(.github/workflows/scenarios.yml)은 있으나 자동 배포 연결 없음
+- 배포 URL / CI·배포 링크 / 첫 배포 commit SHA: https://maldong.vercel.app , /__health 200, releaseId = main 커밋 SHA(05:00 08baf4e 확인). CI 파일(.github/workflows/scenarios.yml)은 있으나 자동 배포 연결 없음
 
 ## 4. 서비스 AI API 설정 (필요할 때만)
 
