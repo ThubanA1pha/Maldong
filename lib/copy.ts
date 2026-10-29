@@ -110,6 +110,55 @@ export const AUTH = {
   saved: "저장했어요",
 } as const;
 
+// ⑧ 미리 보기 (p5 요청 문구)
+export const PREVIEW = {
+  title: "미리 보기",
+  recommendTag: "추천 양",
+  recommendStopTag: "추천 양 · 오늘은 여기까지",
+  nowMg: (n: number) => `지금 약 ${n}mg`,
+  optionSub: {
+    full: "한 잔 다",
+    half: "나머지는 내일 아침에",
+    third: "몇 모금만",
+    small: "한 단계 작은 사이즈로",
+    halfshot: "샷 절반 · 원래대로의 절반",
+    decaf: "디카페인 원두로",
+  } as Partial<Record<Option, string>>,
+  plan: (hhmm: string) => `이번에는 ${hhmm}에 잘 예정`,
+  late: (hhmm: string) => `${hhmm}이 지나서 지금 몸에 남은 카페인으로 비교해요`,
+  calculating: "계산하는 중이에요…",
+  recording: "기록하는 중이에요…",
+  retry: "다시 계산하기",
+  pickDrink: "음료 고르기",
+  noDrink: "고른 음료가 없어요. 음료부터 다시 골라 주세요.",
+  pickOption: "선택지를 하나 골라 주세요",
+  pickBeforeDrink: "그래도 마신다면 선택지를 먼저 골라 주세요",
+} as const;
+
+// ⑩ 확인 질문 (p5 요청 문구)
+export const CHECK = {
+  title: "확인 질문",
+  bubble: "하나씩 물어볼게",
+  loading: "어제 기록을 불러오는 중이에요…",
+  saving: "답을 저장하는 중이에요…",
+  afterPortion: "마신 양을 고르면 잠에 대해 물어볼게요.",
+  gone: "이 기록은 이미 답했거나 찾을 수 없어요.",
+  goneHelp: "홈에서 남아 있는 확인 카드를 다시 골라 주세요.",
+  home: "홈으로",
+} as const;
+
+// API 오류 안내 (서버가 400과 함께 돌려주는 문장)
+export const API_ERROR = {
+  pickDrink: "음료를 먼저 골라 주세요.",
+  pickSituation: "지금 상황을 먼저 골라 주세요.",
+  pickBedtime: "잘 시각을 다시 골라 주세요.",
+  unknownDrink: "없는 음료예요. 음료를 다시 골라 주세요.",
+  unknownRecord: "없는 기록이에요.",
+  pickPortion: "마신 양을 골라 주세요.",
+  pickSleep: "잠을 어떻게 잤는지 골라 주세요.",
+  pickOption: "고를 수 없는 선택지예요.",
+} as const;
+
 export const BAND_TEXT: Record<Band, string> = {
   ok: "잠에 거의 영향 없음",
   mid: "조금 늦게 잠들 수 있음",

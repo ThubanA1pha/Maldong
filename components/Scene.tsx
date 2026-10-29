@@ -7,12 +7,13 @@ import { SERVICE_NAME } from "@/lib/copy";
 import { Bubble, CharacterFace, type Mood } from "./Character";
 import s from "./Scene.module.css";
 
-export function Scene({ scene = "night", height = 300, band = "ok", mood, line, logo = true }: {
+export function Scene({ scene = "night", height = 300, band = "ok", mood, line, logo = true, anchor = "center" }: {
   scene?: "night" | "day"; height?: number; band?: Band; mood?: Mood; line?: string | null; logo?: boolean;
+  /** 그림을 자를 기준. 장면이 낮을 때 "bottom"이면 땅·솜이 쪽이 보인다 */ anchor?: "top" | "center" | "bottom";
 }) {
   return (
     <section className={`${s.scene} ${scene === "day" ? s.day : ""}`} style={{ height }} aria-label={scene === "day" ? "낮 초원" : "밤 초원"}>
-      <img className={s.bg} src={scene === "day" ? "/home/day.svg" : "/home/night.svg"} alt="" />
+      <img className={s.bg} style={{ objectPosition: `center ${anchor}` }} src={scene === "day" ? "/home/day.svg" : "/home/night.svg"} alt="" />
       {logo ? (
         <p className={s.logo}>
           <img src={scene === "day" ? "/character/head.svg" : "/character/head-night.svg"} alt="" width={23} height={21} />
