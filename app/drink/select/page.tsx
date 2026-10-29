@@ -5,6 +5,7 @@
 // Figma 3-1 음료 고르기 하단 시트(6:32, 밤), 4-3 이미 마신 음료 기록(7:375, 낮).
 // 시나리오는 "음료 목록에서 '{브랜드} {메뉴}'를 고른다"를 한 번에 누르므로, 브랜드 탭은 거르지 않고 목록의 해당 브랜드로 스크롤한다.
 // 사이즈를 고르면 바로 다음 화면으로 간다(시나리오에 [다음] 단계가 없다).
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/lib/client";
@@ -91,7 +92,10 @@ function Select() {
 
       <section className={`${s.sheet} ${mode === "already" ? s.already : ""}`} aria-labelledby="sheet-title">
         <div className={s.handle} aria-hidden />
-        <h1 id="sheet-title" className={s.title}>{mode === "already" ? BTN.alreadyDrank : "뭐 마시려고?"}</h1>
+        <div className={s.titleRow}>
+          <h1 id="sheet-title" className={s.title}>{mode === "already" ? BTN.alreadyDrank : "뭐 마시려고?"}</h1>
+          <Link className={s.close} href="/home" aria-label="닫기">✕</Link>
+        </div>
         {mode === "already" ? <p className={s.sub}>다 마신 것으로 저장돼요</p> : null}
 
         {!drinks ? (

@@ -10,7 +10,6 @@ import { BTN, Q, bedtimeButton, drinkLabel } from "@/lib/copy";
 import back from "./assets/back.svg";
 import sceneSituation from "./assets/scene-situation.svg";
 import sceneBedtime from "./assets/scene-bedtime.svg";
-import chevronAccent from "./assets/chevron-accent.svg";
 import chevron from "./assets/chevron.svg";
 import { Bubble, CharacterFace } from "@/components/Character";
 import { SleepySomi } from "./SleepySomi";
@@ -57,12 +56,12 @@ function Situation() {
           </div>
         </div>
         <div className={s.options}>
-          <button className={`${s.option} ${s.primary}`} aria-label={BTN.have} aria-describedby="have-sub" onClick={() => setSituation("have")}>
+          <button className={s.option} aria-label={BTN.have} aria-describedby="have-sub" onClick={() => setSituation("have")}>
             <span>
               <span className={s.optionTitle}>{BTN.have}</span>
               <span id="have-sub" className={s.optionSub}>사서 들고 있어요 · 마실 양을 골라요</span>
             </span>
-            <img src={chevronAccent.src} alt="" />
+            <img src={chevron.src} alt="" />
           </button>
           <button className={s.option} aria-label={BTN.changeable} aria-describedby="changeable-sub" onClick={() => setSituation("changeable")}>
             <span>
