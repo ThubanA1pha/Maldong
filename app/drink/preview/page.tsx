@@ -120,7 +120,7 @@ function PreviewScreen() {
   }
 
   const startBtn = (
-    <button key="start" className={`btn${stop && canSkip ? " link" : " primary"}`} disabled={busy || !current} onClick={start}>
+    <button key="start" className={`btn ${stop && canSkip ? s.secondary : "primary"}`} disabled={busy || !current} onClick={start}>
       {busy ? "기록하는 중이에요…" : BTN.startDrinking}
     </button>
   );
@@ -131,7 +131,7 @@ function PreviewScreen() {
   return (
     <main className={`screen ${s.screen}`}>
       <Header />
-      <div className={s.scene}><Scene scene="night" height={210} logo={false} band={band} line={line} /></div>
+      <div className={s.scene}><Scene scene="night" height={160} logo={false} band={band} line={line} /></div>
       <p className={s.meta}>
         {data.drink}{data.estimated ? " (함량 추정)" : ""} · {late
           ? `${data.bedtime}이 지나서 ${HOME.bedtimeCaption(data.bedtime, true)}으로 비교해요`
