@@ -108,7 +108,7 @@ export const AUTH = {
   signupLine: "반가워!\n이메일이면 충분해",
   loginLine: "다시 왔구나!",
   profileLine: "잘 시각이랑 민감도로\n오늘 밤을 계산해",
-  sensitivityHelp: "담배를 피우면 카페인이 더 빨리, 피임약을 먹으면 더 천천히 빠질 수 있어요.",
+  sensitivityHelp: "담배를 피우거나 복용 중인 약이 있으면 카페인이 몸에 남는 시간이 달라질 수 있어요.",
   sensitivityNow: "현재 민감도",
   saved: "저장했어요",
 } as const;
