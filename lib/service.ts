@@ -33,7 +33,7 @@ const startOfToday = (now: Date) => { const d = new Date(now); d.setHours(0, 0, 
 // ---- 가입·로그인 (F1) ----
 export async function signup(email: string, password: string) {
   email = email.trim().toLowerCase();
-  if (!email || !email.includes("@")) throw new UserError("이메일을 확인해 주세요.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new UserError("이메일을 확인해 주세요.");
   if (password.length < 8) throw new UserError("비밀번호는 8자 이상이어야 해요.");
   if (await db.user.findUnique({ where: { email } })) throw new UserError("이미 가입한 이메일이에요.");
   const user = await db.user.create({
