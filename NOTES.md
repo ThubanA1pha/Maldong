@@ -13,10 +13,32 @@
 
 | 시각 | main 커밋 | 바뀐 것 | 해야 할 일 |
 | --- | --- | --- | --- |
+| 10/30 02:10 | `807e62e` | 배포 준비: `/__health` releaseId가 Vercel에서는 배포한 커밋 SHA, `vercel-build`(DB 반영→시드→빌드), Vercel에서 데모 계정 비밀번호 환경변수가 없으면 계정을 만들지 않음 | **coldgeon(배포)**: 아래 "배포 할 일" 순서대로. 나머지: 할 일 없음 |
 | 10/30 01:58 | `17e746a` | 점검 #2: p3·p4·p5 합침, ①~④ 솜이 장면으로 새로 만듦, 프로필 로그아웃·하단 내비, 로그인 버튼 위치, 공통 `components/Scene.tsx`(Scene·TopBar) | 모두: pull 뒤 새 화면은 `Scene`·`TopBar`를 쓴다. p1·p2: ①~④는 main 것을 기준으로 이어서 다듬는다 |
 | 10/30 02시 | `e6356a7` | 대회장 좌표(35.165706, 126.907069), 시드 계정 "피곤한 학생"(tired@example.com / loopthon-2026), AGENTS.md "pull 전에 바뀐 커밋 보기", 결정 5 보강 | 모두: `docker compose down -v` 뒤 다시 띄워야 새 시드가 들어감. p3: 카페 알림 확인은 이 좌표로 |
 | 10/30 01:30 | `2fb49c5` | 공지·점검을 notes 브랜치로 옮김. `CONTEXT.md`·`docs/user_flow.md`·`docs/review/` 삭제 | 모두: 용어·문구는 `lib/copy.ts`만 본다 |
 | 10/30 01:20 | `05d039a` | 점검 #1: 카카오 제거, 새벽 계산 수정, E2E S1~S7, CI | p1: rebase 충돌 나면 main 쪽. p3·p5: 새벽 숫자 다시 확인 |
+
+---
+
+## 🚀 배포 할 일 (담당: coldgeon)
+
+> 채점 기준: 대회 사이트에 등록한 배포 URL의 `/__health`가 채점 시점에 200이어야 한다(C17~C19). 미등록이면 docker가 정상이어도 실패.
+> 코드 준비는 main `807e62e`에 끝났다. 아래는 계정이 필요한 일이라 사람이 한다. **코드·main은 건드리지 않는다.**
+
+1. vercel.com에 GitHub 계정으로 로그인 → **Add New → Project** → `ThubanA1pha/Maldong` → Import (Framework: Next.js 자동, Build Command는 비워 둔다. `package.json`의 `vercel-build`를 Vercel이 알아서 쓴다)
+2. 프로젝트 **Storage → Create Database → Postgres(Neon) 무료 등급** → 프로젝트에 연결 (`DATABASE_URL`이 자동으로 들어간다. 이름이 다르면 `DATABASE_URL`로 하나 더 만든다)
+3. **Settings → Environment Variables** (Production·Preview 모두)
+   - `SESSION_SECRET`: 32자 이상 아무 글자. **빠뜨리면 누구나 남의 계정으로 들어갈 수 있다** (점검 #3 보안)
+   - `SEED_USER_PASSWORD`, `SEED_TIRED_PASSWORD`: 데모 계정 비밀번호. 저장소의 `loopthon-2026`과 다르게. 없으면 데모 계정을 만들지 않는다(음료·카페만 들어감)
+   - `TZ`: `Asia/Seoul`
+4. **Deploy** → `https://<주소>/__health` 열기 → `{"status":"ok","releaseId":"<main 커밋 SHA>"}` 확인
+5. 데모 계정으로 로그인해 홈이 뜨는지 확인 (`student@example.com`, `tired@example.com` + 3번에서 정한 비밀번호)
+6. 대회 사이트 **우리 팀 → 정보 → 배포 URL**에 주소 등록 → 대시보드 UP 표시 확인
+7. 결과(주소, 확인한 것, 막힌 것)를 단톡에 알린다. 팀장이 이 표에 기록한다
+
+**coldgeon 에이전트에게 줄 지시문**
+> AGENTS.md와 `git show origin/notes:NOTES.md`의 "배포 할 일"을 읽어. 너는 배포 확인 담당이야. 코드와 main은 고치지 마. Vercel 대시보드 작업은 내가 하니까, 각 단계에서 내가 무엇을 눌러야 하는지 안내하고, 배포 뒤 `/__health`와 로그인을 `curl`·브라우저로 확인해서 결과를 정리해 줘. 코드 수정이 필요해 보이면 고치지 말고 무엇을 왜 바꿔야 하는지 적어 줘(팀장이 반영함).
 
 ---
 
@@ -51,6 +73,12 @@
 - **p3** ⑤⑨ 홈·오늘 기록: 새벽 1시대 "01:00에 남을 카페인"이 계산 수정 뒤 맞게 나오는지 확인. 예정 변경 C(S8 말풍선).
 - **p4** ⑥⑦ 음료 고르기·잘 시각: 예정 변경 B는 main에 들어감. 화면 폴더에 복사된 솜이·장면 그림을 공통(`public/`, `components/Scene.tsx`)으로 바꾸기.
 - **p5** ⑧⑩ 미리 보기·확인 질문: 새벽 추천이 맞게 나오는지 확인. 예정 변경 A·B·C(추천 말풍선, 00:00 재계산, 디카페인).
+
+---
+
+# 🔎 점검 #3 (10/30 02:01) — 기획 모의 채점·보안 (채점 세션)
+
+> 전문: `git show origin/notes:reviews/2026-10-30_0201.md`. review 브랜치(문서) 평균 24.5 > main 23.2. 팀장 몫: 음료 공식 값, S8, 입력 검사 400, SESSION_SECRET 필수화.
 
 ---
 
