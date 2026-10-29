@@ -75,15 +75,16 @@ export const SAY = {
 } as const;
 
 // 홈 말풍선 (Figma "홈 상태 3단계 기준 표"). 줄바꿈은 말풍선에서 그대로 보인다.
+// late: 잘 시각이 이미 지난 새벽(isPastBedtime)이면 "오늘 밤 1시에…" 대신 지금 기준으로 말한다.
 const hourText = (hhmm: string) => { const h = Number(hhmm.slice(0, 2)); return h === 0 ? "자정" : `${h}시`; };
-export const HOME_LINE: Record<Band, (hhmm: string) => string> = {
-  ok: (hhmm) => `오늘 밤 ${hourText(hhmm)}에 같이 자는 거지?\n지금까진 아주 좋아`,
-  mid: () => "조금 남겠다.\n다음 잔은 반만 어때?",
+export const HOME_LINE: Record<Band, (hhmm: string, late?: boolean) => string> = {
+  ok: (hhmm, late) => late ? `벌써 ${hourText(hhmm) === "자정" ? "자정이" : `${hourText(hhmm)}가`} 지났어.\n이제 같이 자러 갈까?` : `오늘 밤 ${hourText(hhmm)}에 같이 자는 거지?\n지금까진 아주 좋아`,
+  mid: (_hhmm, late) => late ? "아직 조금 남아 있어.\n다음 잔은 내일 마시자" : "조금 남겠다.\n다음 잔은 반만 어때?",
   high: () => "양 312마리… 왜 안 졸리지…?\n오늘은 여기까지 어때?",
 };
 
 export const HOME = {
-  bedtimeCaption: (hhmm: string) => `${hhmm}에 남을 카페인`,
+  bedtimeCaption: (hhmm: string, late?: boolean) => (late ? "지금 몸에 남은 카페인" : `${hhmm}에 남을 카페인`),
   lastRecord: (time: string, drink: string) => `마지막 ${time} · ${drink}`,
   checkSub: "마신 양이랑 잠만 · 10초",
   cafeNear: (name: string) => `${name} · 50m 안`,
