@@ -22,7 +22,7 @@ SUMTECH 2026 루프톤 팀 17 저장소예요.
 
 ## 함께 일하는 방법
 
-- 문서: [docs/build_spec.md](docs/build_spec.md)(구현 명세), [CONTEXT.md](CONTEXT.md)(용어), [docs/user_flow.md](docs/user_flow.md)(흐름도), [OWNERS.json](OWNERS.json)(담당)
+- 문서: [docs/build_spec.md](docs/build_spec.md)(구현 명세), [lib/copy.ts](lib/copy.ts)(용어·문구), [docs/scenarios.yaml](docs/scenarios.yaml)(흐름), [OWNERS.json](OWNERS.json)(담당)
 - 각자 `p1`~`p5` 브랜치에서 작업하고, 통합 담당이 모의 채점 후 main에 merge한다.
 - 에이전트 지침: [AGENTS.md](AGENTS.md)
 
