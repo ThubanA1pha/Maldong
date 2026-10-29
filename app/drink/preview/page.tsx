@@ -82,13 +82,16 @@ function PreviewScreen() {
   const stop = data.recommend === "stop";
   const current = data.options.find((o) => o.option === selected) ?? null;
   const maxMg = Math.max(1, ...data.options.map((o) => o.addedMg));
-  // 추천 양은 오늘 이미 마신 기록까지 더한 계산(lib/service preview)에서 온다. 선택지를 바꿔도 말풍선에 남긴다.
-  const rec = data.recommend === "stop" ? SAY.recommendStop : data.recommend ? SAY.recommend(OPTION_LABEL[data.recommend]) : null;
+  // 말풍선은 한 마디만 한다: 처음엔 비교(이미 많이 남았으면 "또 마시는 거야…?"), 선택지를 바꾸면 "다시 계산했어".
   // "또 마시는 거야…?"는 이번 음료를 더하기 전에 이미 많이 남았을 때만 말한다(오늘 0잔이면 큰 음료여도 "또"가 아니다).
   const again = data.beforeBand === "high";
-  const line = (changed ? [SAY.recalculated, rec] : [again ? SAY.again : null, SAY.compare(data.bedtime), rec])
-    .filter(Boolean)
-    .join(" ");
+  const line = changed ? SAY.recalculated : again ? SAY.again : SAY.compare(data.bedtime);
+  // 추천 양(오늘 이미 마신 기록까지 더한 계산, lib/service preview)은 말풍선 아래 줄에 따로 둔다.
+  // "오늘은 여기까지"는 아래 띠가 말하므로 이 줄에 넣지 않는다. "또"를 말한 경우 비교 문장도 이 줄로 옮긴다.
+  const rec = data.recommend && data.recommend !== "stop" ? SAY.recommend(OPTION_LABEL[data.recommend]) : null;
+  const subLine = [!changed && again ? SAY.compare(data.bedtime) : null, rec].filter(Boolean).join(" ");
+  // 선택지 사이 차이: 첫 선택지(그대로·원래대로)보다 몇 mg 덜 더해지는지
+  const baseMg = data.options[0]?.addedMg ?? 0;
   const band = current?.band ?? data.beforeBand;
   const canSkip = situation === "have";
   // 잘 시각이 이미 지난 새벽이면 계산은 "지금" 기준이다(lib/caffeine nextBedtime). 홈처럼 그 사실을 함께 알린다.
@@ -123,12 +126,13 @@ function PreviewScreen() {
   return (
     <main className={`screen ${s.screen}`}>
       <Header />
-      <div className={s.scene}><Scene scene="night" height={160} logo={false} band={band} line={line} /></div>
+      <div className={s.scene}><Scene scene="night" height={145} logo={false} band={band} line={line} /></div>
+      {subLine ? <p className={s.recLine} role="status">{subLine}</p> : null}
       <p className={s.meta}>
         {data.drink}{data.estimated ? " (함량 추정)" : ""} · {late ? PREVIEW.late(data.bedtime) : PREVIEW.plan(data.bedtime)}
       </p>
       {stop ? (
-        <div className={s.stopBanner}>
+        <div className={s.stopBanner} role="status">
           <span>{PREVIEW.recommendStopTag}</span>
           {/* beforeMg는 지금이 아니라 잘 시각에 남을 양이다. 잘 시각이 지났으면 지금 기준 */}
           <span className={s.stopBadge}>{HOME.bedtimeCaption(data.bedtime, late)} {data.beforeMg}mg</span>
@@ -150,6 +154,7 @@ function PreviewScreen() {
               <span className={s.optTop}>
                 <span className={s.optName}>{OPTION_LABEL[o.option]}</span>
                 {isRec ? <span className={s.recBadge}>{PREVIEW.recommendTag}</span> : null}
+                {baseMg - o.addedMg > 0 ? <span className={s.delta}>−{baseMg - o.addedMg}mg</span> : null}
                 <span className={s.radio} aria-hidden />
               </span>
               <span className={s.optSub}>

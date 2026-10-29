@@ -24,7 +24,7 @@ export function CheckForm({ recordId }: { recordId: string }) {
     setError(null);
     try {
       const r = await api<{ moved: "up" | "down" | null }>("/api/checks", { body: { recordId, portion, sleep: next } });
-      router.push(`/home?notice=${r.moved === "up" ? "sens_up" : r.moved === "down" ? "sens_down" : "checked"}`);
+      router.replace(`/home?notice=${r.moved === "up" ? "sens_up" : r.moved === "down" ? "sens_down" : "checked"}`);
     } catch (e) {
       setError((e as Error).message);
       setSleep(null);
