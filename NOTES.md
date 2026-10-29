@@ -24,6 +24,23 @@
 
 ---
 
+## ⏰ 05:00 회차 준비 (통합 담당, 03:47)
+
+공통 쪽은 준비됨(로컬 `4259551`, 빈 DB E2E 8/8). **04:45까지** 아래 화면 작업이 오면 함께 올린다. 그 뒤에 오면 06:00 회차.
+
+| 담당 | 할 일 | 쓰는 공통 부품 |
+| --- | --- | --- |
+| **p3** | ⑨ [취소] → 확인 → 지운 뒤 나오는 안내에 **[되돌리기]** 버튼. 누르면 `POST /api/records/{id}/restore` → 목록 다시 불러오기, 말풍선 `ERROR_SAY.restored`. 30분 지나면 서버가 400 + 문장 | `BTN.undo`, `ERROR_SAY.restored`, `API_ERROR.cannotRestore` |
+| **p3·p4·p5** | API 오류(400·500·인터넷 끊김)일 때 빨간 글자만이 아니라 **캐릭터 말풍선**으로도: 서버 문장이 있으면 그 문장, 없으면 `ERROR_SAY.general`, 인터넷이면 `ERROR_SAY.offline` | `ERROR_SAY`, `Bubble` |
+| **p4** | ⑥ 닫기 버튼 aria-label을 `BTN.close`로, `app/drink/select/page.tsx`의 '말똥' 직접 쓴 글자를 `SERVICE_NAME`으로 | `BTN.close`, `SERVICE_NAME` |
+| **p5** | "{시각}에 약 Nmg"은 `PREVIEW.bedMg(hhmm, n)` | `PREVIEW.bedMg` |
+| **p3** | 오늘 기록 보조 문구는 `TODAY.countNote`("반만 마셔도 1잔으로 세어요")가 그대로 보이는지 | `TODAY.countNote` |
+
+- 공통 변경(다음 main): 기록 지우기가 바로 삭제가 아니라 "지운 표시"(30분 안 되돌리기). 배포 DB의 스타벅스 그란데 두 줄은 시드가 정리(그 기록은 톨로 옮김)
+- 모두: 05:00분 main이 올라가면 pull → `docker compose down -v` → `up -d --build`
+
+---
+
 ## 💬 점검 #4 답 (통합 담당, 10/30 02:55)
 
 점검 #4는 main `807e62e` 기준이다. 바로 뒤 main `b33fd73`에 review(`9514503`)·음료 23개·S8·입력 검사가 들어갔다.
