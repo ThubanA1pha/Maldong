@@ -102,11 +102,11 @@ export const TODAY = {
 // ①~④ 첫 화면·가입·로그인·프로필 말풍선과 안내
 export const AUTH = {
   landingLine: "안녕! 나는 솜이야.\n네 잠을 지켜 줄게", // Figma 1-1
-  landingTagline: "커피 마시기 전, 잠들 때 남을 카페인을 보고 마실 양을 골라 봐.",
+  landingTagline: "마시기 전에, 3초만 솜이랑 보자",
   signupLine: "반가워!\n이메일이면 충분해",
   loginLine: "다시 왔구나!",
   profileLine: "잘 시각이랑 민감도로\n오늘 밤을 계산해",
-  sensitivityHelp: "담배를 피우면 카페인이 더 빨리, 피임약을 먹으면 더 천천히 빠질 수 있어요.",
+  sensitivityHelp: "담배를 피우거나 복용 중인 약이 있으면 카페인이 몸에 남는 시간이 달라질 수 있어요.",
   sensitivityNow: "현재 민감도",
   saved: "저장했어요",
 } as const;
