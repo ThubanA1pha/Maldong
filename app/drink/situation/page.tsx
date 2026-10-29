@@ -10,9 +10,9 @@ import { BTN, Q, bedtimeButton, drinkLabel } from "@/lib/copy";
 import back from "./assets/back.svg";
 import sceneSituation from "./assets/scene-situation.svg";
 import sceneBedtime from "./assets/scene-bedtime.svg";
-import somiCalm from "./assets/somi-calm.svg";
 import chevronAccent from "./assets/chevron-accent.svg";
 import chevron from "./assets/chevron.svg";
+import { Bubble, CharacterFace } from "@/components/Character";
 import { SleepySomi } from "./SleepySomi";
 import s from "./situation.module.css";
 
@@ -51,11 +51,10 @@ function Situation() {
         {top}
         <div className={s.hero} style={{ height: 220 }}>
           <img className={s.scene} src={sceneSituation.src} alt="" />
-          <img className={s.somi} src={somiCalm.src} alt="" style={{ left: 48.8, top: 124.8, width: 78.4, height: 84.8 }} />
-          <h1 className={s.bubble} style={{ left: 150, top: 60, maxWidth: "calc(100% - 170px)" }}>
-            {drink ? <>{drinkLabel(drink)}!<br /></> : null}
-            지금 어떤 상황이야?
-          </h1>
+          <div className={s.somi} style={{ left: 40, top: 108 }}><CharacterFace band="ok" size={96} /></div>
+          <div className={s.bubble} style={{ left: 150, top: 60, maxWidth: "calc(100% - 170px)" }}>
+            <Bubble>{drink ? `${drinkLabel(drink)}!\n` : ""}지금 어떤 상황이야?</Bubble>
+          </div>
         </div>
         <div className={s.options}>
           <button className={`${s.option} ${s.primary}`} aria-label={BTN.have} aria-describedby="have-sub" onClick={() => setSituation("have")}>
@@ -82,7 +81,7 @@ function Situation() {
       {top}
       <div className={s.hero} style={{ height: 260 }}>
         <img className={s.scene} src={sceneBedtime.src} alt="" />
-        <h1 className={s.bubble} style={{ left: 40, top: 56 }}>{Q.bedtime}</h1>
+        <div className={s.bubble} style={{ left: 40, top: 56 }}><Bubble>{Q.bedtime}</Bubble></div>
         <SleepySomi />
       </div>
       {!bedtime ? (

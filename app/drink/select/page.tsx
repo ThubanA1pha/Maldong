@@ -9,12 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/lib/client";
 import { BTN } from "@/lib/copy";
-import sceneNight from "./assets/scene-night.svg";
-import sceneDay from "./assets/scene-day.svg";
-import somiNight from "./assets/somi-night.svg";
-import somiDay from "./assets/somi-day.svg";
-import headNight from "./assets/logo-head-night.svg";
-import headDay from "./assets/logo-head-day.svg";
+import { CharacterFace } from "@/components/Character";
 import bellNight from "./assets/bell-night.svg";
 import bellDay from "./assets/bell-day.svg";
 import check from "./assets/check.svg";
@@ -85,14 +80,10 @@ function Select() {
   return (
     <main className={`${s.root} ${night ? s.night : s.day}`}>
       <div className={s.backdrop} aria-hidden>
-        <img className={s.scene} src={(night ? sceneNight : sceneDay).src} alt="" />
-        {night ? (
-          <img className={s.somi} src={somiNight.src} alt="" style={{ left: "calc(50% - 34px)", top: 331, width: 98, height: 106 }} />
-        ) : (
-          <img className={s.somi} src={somiDay.src} alt="" style={{ left: "calc(50% - 25px)", top: 329.2, width: 89.83, height: 97.17 }} />
-        )}
+        <img className={s.scene} src={night ? "/home/night.svg" : "/home/day.svg"} alt="" />
+        <div className={s.somi} style={{ left: "calc(50% - 45px)", top: 310 }}><CharacterFace band="ok" size={120} /></div>
         <div className={s.brand}>
-          <span className={s.logo}><img src={(night ? headNight : headDay).src} alt="" />말똥</span>
+          <span className={s.logo}><img src={night ? "/character/head-night.svg" : "/character/head.svg"} alt="" />말똥</span>
           <img src={(night ? bellNight : bellDay).src} alt="" />
         </div>
       </div>
