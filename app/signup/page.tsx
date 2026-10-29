@@ -3,12 +3,20 @@
 // 담당: ② 가입 (F1 · S1)
 import { AuthForm } from "@/components/AuthForm";
 import { BTN } from "@/lib/copy";
+import Link from "next/link";
 
 export default function Signup() {
   return (
     <main className="screen">
       <h1 className="title">가입</h1>
-      <AuthForm endpoint="/api/auth/signup" submitLabel={BTN.signup} next="/profile?first=1" />
+      <section className="card stack" aria-label="이메일로 가입">
+        <h2 className="title">이메일로 가입</h2>
+        <AuthForm endpoint="/api/auth/signup" submitLabel={BTN.signup} next="/profile?first=1" />
+      </section>
+      <p className="muted">카카오 계정으로도 시작할 수 있어요.</p>
+      <a className="btn" href="/api/auth/kakao">{BTN.kakao}</a>
+      <p className="muted">이미 가입하셨나요?</p>
+      <Link className="btn link" href="/login">{BTN.login}</Link>
     </main>
   );
 }
