@@ -2,6 +2,7 @@
 // 담당: ⑨ 오늘 기록 (F5 · S6). [취소] → 화면 안 시트 "이 기록을 지울까?" → [지우기] / [아니].
 // 브라우저 confirm을 쓰지 않는다. 지운 뒤 목록은 서버에서 다시 받아 잔 수와 함께 맞춘다.
 // 줄마다 음료 이름과 양을 두 줄로 보이되, 글자로는 "{음료} · {양}" 한 덩어리로 읽히게 둔다(E2E·화면 읽기 프로그램).
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CharacterFace } from "@/components/Character";
 import { api } from "@/lib/client";
@@ -88,7 +89,13 @@ export function TodayList({ initial }: { initial: Item[] }) {
       ) : null}
 
       {items.length === 0 ? (
-        <p className={s.empty}>{SAY.empty}</p>
+        <div className={s.empty}>
+          <p className={s.emptyText}>{SAY.empty}</p>
+          <div className={s.emptyActions}>
+            <Link className="btn primary" href="/drink/select?mode=before">{BTN.beforeDrink}</Link>
+            <Link className="btn" href="/drink/select?mode=already">{BTN.alreadyDrank}</Link>
+          </div>
+        </div>
       ) : (
         <ul className={s.list}>
           {items.map((it) => {

@@ -6,7 +6,7 @@
 // 시나리오는 "음료 목록에서 '{브랜드} {메뉴}'를 고른다"를 한 번에 누르므로, 브랜드 탭은 거르지 않고 목록의 해당 브랜드로 스크롤한다.
 // 사이즈를 고르면 바로 다음 화면으로 간다(시나리오에 [다음] 단계가 없다).
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent } from "react";
 import { api } from "@/lib/client";
 import { BTN } from "@/lib/copy";
 import { CharacterFace } from "@/components/Character";
@@ -32,6 +32,41 @@ function Select() {
   const [night, setNight] = useState(true);
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  // 시트 손잡이: 아래로 끌어 놓으면(90px 넘게 또는 빠르게) 시트가 내려가며 홈으로 돌아간다. 덜 끌면 제자리로.
+  const dragFrom = useRef<{ y: number; t: number } | null>(null);
+  const [dragY, setDragY] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [closing, setClosing] = useState(false);
+
+  function closeSheet() {
+    if (closing) return;
+    setClosing(true);
+    setTimeout(() => router.push("/home"), 200);
+  }
+  function onDragStart(e: RPointerEvent<HTMLDivElement>) {
+    dragFrom.current = { y: e.clientY, t: Date.now() };
+    setDragging(true);
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* 일부 브라우저는 캡처를 거부해도 끌기는 동작한다 */ }
+  }
+  function onDragMove(e: RPointerEvent<HTMLDivElement>) {
+    if (!dragFrom.current) return;
+    setDragY(Math.max(0, e.clientY - dragFrom.current.y));
+  }
+  function onDragEnd(e: RPointerEvent<HTMLDivElement>) {
+    const from = dragFrom.current;
+    dragFrom.current = null;
+    setDragging(false);
+    if (!from) return;
+    const dist = Math.max(0, e.clientY - from.y);
+    const speed = dist / Math.max(1, Date.now() - from.t); // px/ms
+    if (dist > 90 || (dist > 24 && speed > 0.6)) closeSheet();
+    else setDragY(0);
+  }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeSheet(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
 
   useEffect(() => {
     setNight(isNight(new Date()));
@@ -87,11 +122,32 @@ function Select() {
           <img src={(night ? bellNight : bellDay).src} alt="" />
         </div>
       </div>
-      <div className={s.scrim} aria-hidden />
+      <div
+        className={s.scrim}
+        aria-hidden
+        onClick={closeSheet}
+        style={{ opacity: closing ? 0 : 1 - Math.min(dragY / 400, 0.6), transition: dragging ? "none" : undefined }}
+      />
 
-      <section className={`${s.sheet} ${mode === "already" ? s.already : ""}`} aria-labelledby="sheet-title">
-        <div className={s.handle} aria-hidden />
-        <h1 id="sheet-title" className={s.title}>{mode === "already" ? BTN.alreadyDrank : "뭐 마시려고?"}</h1>
+      <section
+        className={`${s.sheet} ${mode === "already" ? s.already : ""}`}
+        aria-labelledby="sheet-title"
+        style={{
+          transform: closing ? "translateY(100%)" : dragY ? `translateY(${dragY}px)` : undefined,
+          transition: dragging ? "none" : undefined,
+        }}
+      >
+        <div
+          className={s.dragZone}
+          onPointerDown={onDragStart}
+          onPointerMove={onDragMove}
+          onPointerUp={onDragEnd}
+          onPointerCancel={onDragEnd}
+          data-testid="sheet-handle"
+        >
+          <div className={s.handle} aria-hidden />
+          <h1 id="sheet-title" className={s.title}>{mode === "already" ? BTN.alreadyDrank : "뭐 마시려고?"}</h1>
+        </div>
         {mode === "already" ? <p className={s.sub}>다 마신 것으로 저장돼요</p> : null}
 
         {!drinks ? (

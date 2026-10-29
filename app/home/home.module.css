@@ -6,7 +6,8 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding-bottom: 130px;
+  /* 하단 내비(90) + 위로 솟은 가운데 [마시기 전 확인] 버튼(62) + 16 → 맨 아래 "+ 이미 마신 음료 기록"이 가리지 않게 */
+  padding-bottom: calc(90px + 62px + 16px + env(safe-area-inset-bottom, 0px));
   background: var(--bg);
 }
 
