@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon">
+<g id="Vector">
+<path d="M8 6H20ZM8 12H20ZM8 18H20Z" fill="black"/>
+<path d="M8 6H20M8 12H20M8 18H20" stroke-width="2" stroke-linecap="round" stroke="#9C97AE"/>
+</g>
+<path id="Vector_2" d="M4 7.4C4.7732 7.4 5.4 6.7732 5.4 6C5.4 5.2268 4.7732 4.6 4 4.6C3.2268 4.6 2.6 5.2268 2.6 6C2.6 6.7732 3.2268 7.4 4 7.4Z" fill="#9C97AE"/>
+<path id="Vector_3" d="M4 13.4C4.7732 13.4 5.4 12.7732 5.4 12C5.4 11.2268 4.7732 10.6 4 10.6C3.2268 10.6 2.6 11.2268 2.6 12C2.6 12.7732 3.2268 13.4 4 13.4Z" fill="#9C97AE"/>
+<path id="Vector_4" d="M4 19.4C4.7732 19.4 5.4 18.7732 5.4 18C5.4 17.2268 4.7732 16.6 4 16.6C3.2268 16.6 2.6 17.2268 2.6 18C2.6 18.7732 3.2268 19.4 4 19.4Z" fill="#9C97AE"/>
+</g>
+</svg>

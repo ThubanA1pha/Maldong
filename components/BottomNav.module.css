@@ -1,0 +1,51 @@
+/* [공통] 하단 내비. Figma: 높이 90(홈 표시줄 포함), 위 모서리 22, 탭 64폭·아이콘 23·글자 11, 가운데 버튼 62. */
+.nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 10px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -6px 10px var(--shadow);
+}
+.inner { display: flex; justify-content: space-evenly; align-items: flex-start; }
+.tab {
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--subtle);
+  text-decoration: none;
+  min-height: 44px;
+}
+.tab[aria-current="page"] { color: var(--accent); font-weight: 700; }
+.main {
+  width: 86px;
+  margin-top: -30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+.mainIcon {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 45%, transparent), 0 0 0 5px var(--surface);
+}
+.tab:focus-visible, .main:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 12px; }

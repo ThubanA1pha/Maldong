@@ -1,0 +1,176 @@
+/* 담당: p3 (⑤ 홈). 기준: Figma 02 초원 홈. 색·글꼴은 app/globals.css 토큰만 쓴다. */
+
+.home {
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 130px;
+  background: var(--bg);
+}
+
+/* ---- 초원 (Figma 390×470) ---- */
+.hero {
+  position: relative;
+  height: 470px;
+  overflow: hidden;
+  flex: none;
+}
+.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.top {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  left: 18px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.logo { font-family: var(--font-display); font-size: 24px; line-height: 24px; letter-spacing: -0.5px; color: var(--accent); }
+.night .logo { color: var(--accent-fg); }
+
+.badge, .sheepCount {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  left: 20px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent-fg);
+}
+.badge { padding: 5px 10px; border-radius: 999px; background: color-mix(in srgb, var(--fg) 55%, transparent); font-size: 12px; font-weight: 700; }
+.sheepCount { left: 24px; padding: 4px 8px; border-radius: 10px; font-size: 13px; background: color-mix(in srgb, var(--accent-fg) 15%, transparent); }
+.day .sheepCount { background: color-mix(in srgb, var(--fg) 55%, transparent); }
+
+.talk {
+  position: absolute;
+  top: 206px;
+  left: 28px;
+  right: 28px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.cafeBtns { display: flex; gap: 8px; }
+.cafeGo, .cafeNo {
+  padding: 11px 16px;
+  border-radius: 16px;
+  border: 0;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cafeGo { background: var(--accent); color: var(--accent-fg); }
+.cafeNo { background: color-mix(in srgb, var(--surface) 90%, transparent); color: var(--accent-strong); }
+
+/* 솜이: 발끝이 초원 위(Figma top 306, 120×128) */
+.walker {
+  position: absolute;
+  top: 306px;
+  left: calc(50% - 60px);
+  z-index: 1;
+  animation: walk 10s ease-in-out infinite;
+}
+.facing { animation: face 10s step-end infinite; }
+.breathe { animation: breathe 2s ease-in-out infinite; }
+@keyframes walk {
+  0%, 15% { transform: translateX(40px); }
+  40%, 55% { transform: translateX(-40px); }
+  80%, 100% { transform: translateX(40px); }
+}
+/* 오른쪽으로 걸을 때 좌우 반전(Figma 2-1), 왼쪽으로 걸을 때 원래 방향 */
+@keyframes face {
+  0% { transform: scaleX(1); }
+  15% { transform: scaleX(1); }
+  55% { transform: scaleX(-1); }
+  100% { transform: scaleX(-1); }
+}
+@keyframes breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+/* 카페 앞 알림 중에는 멈춰서 말을 건다(Figma 2-3: 오른쪽에 멈춤) */
+.hero[data-cafe="true"] .walker { animation: none; transform: translateX(80px); }
+.hero[data-cafe="true"] .facing { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .walker, .facing, .breathe { animation: none; }
+  .walker { transform: translateX(40px); }
+}
+
+/* ---- 아래 패널 (Figma: 위 모서리 28, 16 여백, 카드 간격 8) ---- */
+.panel {
+  position: relative;
+  z-index: 3;
+  margin-top: -28px;
+  padding: 16px 16px 0;
+  border-radius: 28px 28px 0 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+.card { background: var(--surface); border-radius: var(--radius); padding: 13px 15px; }
+.grow { flex: 1; min-width: 0; }
+.cardTitle { margin: 0; font-size: 14.5px; font-weight: 700; word-break: keep-all; }
+.cardSub { margin: 2px 0 0; font-size: 12px; color: var(--muted); word-break: keep-all; overflow-wrap: anywhere; }
+
+.statusRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.bandText { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.4px; }
+.mg { font-size: 12px; color: var(--muted); }
+.meter { display: flex; gap: 4px; padding-top: 10px; }
+.seg { flex: 1; height: 8px; border-radius: 4px; opacity: .25; }
+.seg.ok { background: var(--ok); }
+.seg.mid { background: var(--mid); }
+.seg.high { background: var(--high); }
+.seg[data-on="true"] { opacity: 1; }
+
+.checkCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  border-radius: var(--radius);
+  background: var(--warm);
+}
+.answerBtn {
+  flex: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--fg);
+  color: var(--accent-fg);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.todayCard { position: relative; display: flex; align-items: center; gap: 10px; }
+.cups { display: flex; gap: 10px; flex: none; }
+.cup { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; background: var(--cup); }
+.cup[data-narrow="true"] { width: 24px; }
+.todayLink { font-size: 14.5px; font-weight: 700; text-decoration: none; }
+/* 카드 전체를 누를 수 있게: 링크 이름은 "오늘 커피 N잔 ›" 그대로 */
+.todayLink::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
+.todayLink:focus-visible::after { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chev { flex: none; }
+
+.already {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+/* ---- 로딩·오류 ---- */
+.skeleton { height: 76px; border-radius: var(--radius); background: var(--line); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
