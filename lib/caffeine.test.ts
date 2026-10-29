@@ -16,6 +16,13 @@ describe("nextBedtime", () => {
   it("rolls to the next day after midnight target", () => {
     expect(nextBedtime(at("2026-10-29T21:00:00"), "01:00")).toEqual(at("2026-10-30T01:00:00"));
   });
+  it("treats a just-passed bedtime as now", () => {
+    expect(nextBedtime(at("2026-10-30T01:40:00"), "01:00")).toEqual(at("2026-10-30T01:40:00"));
+    expect(nextBedtime(at("2026-10-29T23:30:00"), "23:00")).toEqual(at("2026-10-29T23:30:00"));
+  });
+  it("moves to tomorrow when bedtime passed long ago", () => {
+    expect(nextBedtime(at("2026-10-30T13:00:00"), "01:00")).toEqual(at("2026-10-31T01:00:00"));
+  });
   it("same day when still ahead", () => {
     expect(nextBedtime(at("2026-10-29T21:00:00"), "23:30")).toEqual(at("2026-10-29T23:30:00"));
   });

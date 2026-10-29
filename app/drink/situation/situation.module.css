@@ -1,0 +1,55 @@
+/* 담당: ⑦ 상황·잘 시각. Figma 3-2(6:299)·3-3(6:433). 색·글꼴은 globals.css 토큰만 쓴다. */
+.root { max-width: 430px; min-height: 100dvh; margin: 0 auto; background: var(--bg); display: flex; flex-direction: column; }
+
+.top { height: calc(52px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 18px 0; display: flex; align-items: center; }
+.back { width: 40px; height: 40px; margin-left: -9px; border: 0; background: none; padding: 9px; cursor: pointer; display: flex; }
+.back img { width: 22px; height: 22px; }
+
+.hero { position: relative; overflow: hidden; width: 100%; }
+.hero > .scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.somi { position: absolute; }
+
+.bubble {
+  position: absolute; background: var(--surface); border-radius: 18px; padding: 13px 15px 9px;
+  filter: drop-shadow(0 4px 0 var(--shadow-soft));
+  font-family: var(--font-display); font-size: 16.5px; line-height: 22.275px; color: var(--fg);
+  margin: 0; font-weight: 400; word-break: keep-all;
+}
+
+.options { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 0; }
+.option {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
+  padding: 18px; border-radius: 18px; border: 2px solid var(--surface); background: var(--surface);
+  text-align: left; cursor: pointer; color: var(--fg);
+}
+.option.primary { border-color: var(--accent); background: var(--accent-tint); }
+.option:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
+.optionTitle { display: block; font-size: 17px; font-weight: 700; }
+.optionSub { display: block; padding-top: 2px; font-size: 12px; color: var(--muted); }
+.option img { width: 18px; height: 18px; flex: none; }
+
+.actions { display: flex; flex-direction: column; gap: 10px; padding: 22px 20px 24px; }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%;
+  border: 0; border-radius: 18px; padding: 11px 16px; font-size: 17px; font-weight: 700; cursor: pointer;
+}
+.btn:disabled { opacity: .5; cursor: default; }
+.btnPrimary { min-height: 48px; background: var(--accent); color: var(--accent-fg); }
+.btnSoft { min-height: 42px; background: var(--accent-soft); color: var(--accent-strong); }
+.num { font-family: var(--font-num); }
+.hint { margin: 0; text-align: center; font-size: 12.5px; color: var(--muted); }
+
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.field input {
+  padding: 12px 14px; border-radius: 14px; border: 2px solid var(--accent); background: var(--surface);
+  color: var(--fg); font-family: var(--font-num); font-size: 17px;
+}
+
+.status { margin: 0; padding: 0 20px; font-size: 14px; color: var(--muted); }
+.error { margin: 0; padding: 0 20px; font-size: 14px; color: var(--high); }
+
+.sleepy { position: absolute; left: calc(50% - 55px); top: 130px; width: 110px; height: 117px; }
+.part { position: absolute; display: block; }
+.part img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; }
+.part .rotated { inset: auto; left: 50%; top: 50%; width: 18.33px; height: 10.09px; }
+.z { position: absolute; font-family: var(--font-num); font-weight: 700; color: var(--accent); line-height: 1; }

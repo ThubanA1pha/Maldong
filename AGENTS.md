@@ -2,6 +2,12 @@
 
 이 저장소에서 일하는 코딩 에이전트는 작업 전에 이 파일을 읽는다.
 
+## 0. 작업 시작할 때마다 (가장 먼저)
+
+1. `git pull --rebase origin main`
+2. **`docs/review/LATEST.md`(최신 점검 결과)를 읽고, 내 담당(p1~p5) 항목을 먼저 처리한다.** 순서는 `docs/review/README.md`.
+3. 커밋 메시지에 처리한 점검 항목 번호를 적는다. 예: `p1: review#1-3 프로필 로그아웃 버튼`
+
 ## 1. 내 담당 확인
 
 1. 사람에게 받은 담당 번호(`p1`~`p5`)를 확인한다. 모르면 묻고 멈춘다.
@@ -47,3 +53,13 @@ npm run scope -- p3      # 내 번호
 
 - 작업이 끝나면 커밋 메시지에 화면 번호를 적는다. 예: `p3: 홈 캐릭터 배치와 빈 상태`
 - 확인하지 못한 것은 "미확인"이라고 사람에게 알린다. 확인했다고 말하지 않는다.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
