@@ -37,6 +37,13 @@
 6. 대회 사이트 **우리 팀 → 정보 → 배포 URL**에 주소 등록 → 대시보드 UP 표시 확인
 7. 결과(주소, 확인한 것, 막힌 것)를 단톡에 알린다. 팀장이 이 표에 기록한다
 
+**배포 상태 (10/30 02:13 팀장 확인)**
+- ✅ https://maldong.vercel.app 열림, `/__health` 200, DB 연결됨(로그인 API가 정상 오류 문구를 돌려줌)
+- ❌ `releaseId`가 `"dev"`. 배포된 화면이 main 최신(`807e62e`)이 아니라 **`17e746a` 이전 버전**이다(첫 화면에 새 말풍선 없음, 로그인하지 않은 /home이 로그인으로 안 감)
+- ❌ GitHub 저장소에 Vercel 배포 기록·상태 표시가 없다 → **저장소 Git 연결이 안 된 배포**(CLI나 다른 저장소)로 보인다
+- 할 일: Vercel 프로젝트 **Settings → Git**에서 `ThubanA1pha/Maldong` 연결, **Production Branch = main** 확인 → **Redeploy** → `/__health`의 releaseId가 main 커밋 SHA(지금 `807e62e…`)인지 확인. 이후 main에 올라갈 때마다 자동 배포된다
+- 확인: 환경변수 `SESSION_SECRET` 들어갔는지(점검 #3 보안), 데모 계정 비밀번호를 `loopthon-2026`과 다르게 넣었는지
+
 **coldgeon 에이전트에게 줄 지시문**
 > AGENTS.md와 `git show origin/notes:NOTES.md`의 "배포 할 일"을 읽어. 너는 배포 확인 담당이야. 코드와 main은 고치지 마. Vercel 대시보드 작업은 내가 하니까, 각 단계에서 내가 무엇을 눌러야 하는지 안내하고, 배포 뒤 `/__health`와 로그인을 `curl`·브라우저로 확인해서 결과를 정리해 줘. 코드 수정이 필요해 보이면 고치지 말고 무엇을 왜 바꿔야 하는지 적어 줘(팀장이 반영함).
 
