@@ -3,14 +3,14 @@
 import bcrypt from "bcryptjs";
 import { db } from "./db";
 import {
-  HALF_LIFE_H, OPTION_FACTOR, OPTIONS_BY_SITUATION, addedAtBedtime, adjustSensitivity, band, nextBedtime, recommend, totalAtBedtime,
+  HALF_LIFE_H, OPTION_FACTOR, startOfDayKST, OPTIONS_BY_SITUATION, addedAtBedtime, adjustSensitivity, band, nextBedtime, recommend, totalAtBedtime,
   type Band, type Option, type Sensitivity, type Situation, type SleepAnswer,
 } from "./caffeine";
 import { drinkLabel, recordLabel } from "./copy";
 
 export class UserError extends Error {}
 
-const startOfToday = (now: Date) => { const d = new Date(now); d.setHours(0, 0, 0, 0); return d; };
+const startOfToday = (now: Date) => startOfDayKST(now);
 
 // ---- 가입·로그인 (F1) ----
 export async function signup(email: string, password: string) {
@@ -38,7 +38,7 @@ export async function getProfile(userId: string) {
 
 export async function updateProfile(userId: string, usualBedtime: string, sensitivity: Sensitivity) {
   if (!/^\d{2}:\d{2}$/.test(usualBedtime)) throw new UserError("잠드는 시각을 골라 주세요.");
-  if (!(sensitivity in HALF_LIFE_H)) throw new UserError("민감도를 골라 주세요.");
+  if (!Object.hasOwn(HALF_LIFE_H, sensitivity)) throw new UserError("민감도를 골라 주세요.");
   await db.profile.update({ where: { userId }, data: { usualBedtime, sensitivity } });
 }
 
@@ -108,6 +108,8 @@ async function resolveDrink(drinkId: string, option: Option) {
 }
 
 export async function preview(userId: string, drinkId: string, situation: Situation, bedtimeHHMM: string, now = new Date()) {
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(bedtimeHHMM)) throw new UserError("잘 시각을 다시 골라 주세요.");
+  if (!(await db.drink.findUnique({ where: { id: drinkId } }))) throw new UserError("목록에 없는 음료예요.");
   const profile = await getProfile(userId);
   const hl = HALF_LIFE_H[profile.sensitivity];
   const bed = nextBedtime(now, bedtimeHHMM);
@@ -134,6 +136,9 @@ export async function preview(userId: string, drinkId: string, situation: Situat
 }
 
 export async function createRecord(userId: string, input: { drinkId: string; option: Option; bedtime: string }, now = new Date()) {
+  if (!Object.hasOwn(OPTION_FACTOR, input.option)) throw new UserError("고를 수 없는 선택지예요.");
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(input.bedtime)) throw new UserError("잘 시각을 다시 골라 주세요.");
+  if (!(await db.drink.findUnique({ where: { id: input.drinkId } }))) throw new UserError("목록에 없는 음료예요.");
   const profile = await getProfile(userId);
   const hl = HALF_LIFE_H[profile.sensitivity];
   const d = await resolveDrink(input.drinkId, input.option);
@@ -151,6 +156,8 @@ export async function createRecord(userId: string, input: { drinkId: string; opt
 const PORTION_FACTOR = { all: 1, half: 0.5, little: 0.25, none: 0 } as const;
 
 export async function submitCheck(userId: string, recordId: string, portion: keyof typeof PORTION_FACTOR, sleep: SleepAnswer) {
+  if (!Object.hasOwn(PORTION_FACTOR, portion)) throw new UserError("마신 양을 골라 주세요.");
+  if (!["great", "ok", "tossed", "barely"].includes(sleep)) throw new UserError("잠을 어떻게 잤는지 골라 주세요.");
   const r = await db.record.findFirst({ where: { id: recordId, userId }, include: { drink: true } });
   if (!r) throw new UserError("없는 기록이에요.");
   if (r.answeredAt) throw new UserError("이미 답한 기록이에요.");

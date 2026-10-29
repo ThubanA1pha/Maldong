@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { addedAtBedtime, adjustSensitivity, band, isPastBedtime, nextBedtime, recommend, remaining, totalAtBedtime } from "./caffeine";
 
-const at = (s: string) => new Date(s);
+const at = (s: string) => new Date(`${s}+09:00`); // 한국 시간으로 읽는다(서버 시간대와 무관)
 
 describe("remaining", () => {
   it("halves after one half-life", () => {

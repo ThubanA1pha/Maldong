@@ -14,6 +14,8 @@ test("S2 이미 받은 커피를 마시기 직전에 확인하고 반만 마시�
   await page.getByRole("button", { name: "이미 음료가 있어요" }).click()
   // 5. [오늘도 01:00]을 누른다
   await page.getByRole("button", { name: "오늘도 01:00" }).click()
+  // expected: 캐릭터가 오늘 이미 마신 기록까지 더해 추천 양을 말한다
+  await expect(page.getByRole("status").filter({ hasText: /마시는 걸 추천해\.|오늘은 여기까지/ }).first()).toBeVisible()
   // 6. 선택지에서 [반만]을 누른다
   const full = page.getByRole("button", { name: /^그대로/ })
   const half = page.getByRole("button", { name: /^반만/ })

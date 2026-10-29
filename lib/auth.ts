@@ -4,7 +4,14 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const COOKIE = "session";
-const secret = () => process.env.SESSION_SECRET ?? "dev-only-session-secret";
+// 배포(production)에서 SESSION_SECRET이 없으면 누구나 쿠키를 만들 수 있으므로 쓰지 않고 멈춘다(점검 #3 보안).
+// docker-compose.yml은 로컬 전용 값을 넣어 두었다.
+const secret = () => {
+  const s = process.env.SESSION_SECRET;
+  if (s) return s;
+  if (process.env.NODE_ENV === "production") throw new Error("SESSION_SECRET is required in production");
+  return "dev-only-session-secret";
+};
 
 function sign(value: string) {
   return createHmac("sha256", secret()).update(value).digest("base64url");

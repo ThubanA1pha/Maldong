@@ -29,21 +29,35 @@ export function remaining(doseMg: number, takenAt: Date, at: Date, halfLifeH: nu
   return doseMg * 0.5 ** (hours / halfLifeH);
 }
 
-// 오늘 밤 잘 시각. now 이후 가장 가까운 "HH:MM"이다.
+// 시각 계산은 서버 시간대와 상관없이 한국 시간(UTC+9, 서머타임 없음)으로 한다. Vercel 서버는 UTC로 돈다.
+const KST_MS = 9 * HOUR_MS;
+const DAY_MS = 24 * HOUR_MS;
+
+// 한국 시간 기준 오늘 0시.
+export function startOfDayKST(now: Date): Date {
+  const k = new Date(now.getTime() + KST_MS);
+  k.setUTCHours(0, 0, 0, 0);
+  return new Date(k.getTime() - KST_MS);
+}
+
+// 한국 시간 "HH:MM".
+export function hhmmKST(d: Date): string {
+  const k = new Date(d.getTime() + KST_MS);
+  return `${String(k.getUTCHours()).padStart(2, "0")}:${String(k.getUTCMinutes()).padStart(2, "0")}`;
+}
+
+// 오늘 밤 잘 시각. now 이후 가장 가까운 "HH:MM"(한국 시간)이다.
 // 단, 잘 시각이 이미 지났고 지난 지 LATE_HOURS 안이면(예: 01:00 예정인데 지금 01:40) 내일로 넘기지 않고 지금 바로 잔다고 본다.
 export const LATE_HOURS = 8;
 export function nextBedtime(now: Date, hhmm: string): Date {
   const [h, m] = hhmm.split(":").map(Number);
-  const t = new Date(now);
-  t.setHours(h, m, 0, 0);
-  if (t.getTime() > now.getTime()) {
-    const passed = new Date(t); passed.setDate(passed.getDate() - 1);
-    if (now.getTime() - passed.getTime() < LATE_HOURS * HOUR_MS) return new Date(now);
-    return t;
+  const t = startOfDayKST(now).getTime() + h * HOUR_MS + m * 60_000;
+  if (t > now.getTime()) {
+    if (now.getTime() - (t - DAY_MS) < LATE_HOURS * HOUR_MS) return new Date(now);
+    return new Date(t);
   }
-  if (now.getTime() - t.getTime() < LATE_HOURS * HOUR_MS) return new Date(now);
-  t.setDate(t.getDate() + 1);
-  return t;
+  if (now.getTime() - t < LATE_HOURS * HOUR_MS) return new Date(now);
+  return new Date(t + DAY_MS);
 }
 
 // 잘 시각이 이미 지나 nextBedtime이 "지금"을 돌려주는 때(예: 01:00 예정인데 지금 01:30). 홈은 이때 "지금 남은 양"이라고 말한다.

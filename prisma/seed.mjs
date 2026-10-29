@@ -13,7 +13,10 @@ const TIRED_EMAIL = process.env.SEED_TIRED_EMAIL ?? "tired@example.com";
 const TIRED_PASSWORD = process.env.SEED_TIRED_PASSWORD ?? "loopthon-2026";
 
 const HOUR = 3_600_000;
-const startOfToday = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+// 한국 시간(UTC+9) 기준. 서버 시간대(Vercel은 UTC)와 상관없게 한다. lib/caffeine.ts와 같은 규칙.
+const KST = 9 * 3_600_000;
+const startOfToday = () => { const k = new Date(Date.now() + KST); k.setUTCHours(0, 0, 0, 0); return new Date(k.getTime() - KST); };
+const hhmmKST = (d) => { const k = new Date(d.getTime() + KST); return `${String(k.getUTCHours()).padStart(2, "0")}:${String(k.getUTCMinutes()).padStart(2, "0")}`; };
 
 async function main() {
   for (const d of data.drinks) {
@@ -62,7 +65,7 @@ async function main() {
     ["compose-iced-americano-r", "full", 3, 19, "all", "tossed"],
     ["mega-latte-r", "third", 4, 14, "little", "great"],
     ["paik-latte-r", "full", 5, 11, "all", "ok"],
-    ["sbux-iced-americano-g", "half", 5, 21, "half", "ok"],
+    ["sbux-iced-americano-t", "half", 5, 21, "half", "ok"],
   ];
   for (const [drinkId, option, daysAgo, hour, portion, sleep] of past) {
     const at = new Date(today.getTime() - daysAgo * 24 * HOUR + hour * HOUR);
@@ -76,7 +79,7 @@ async function seedTired() {
   if (await db.user.findUnique({ where: { email: TIRED_EMAIL } })) return;
   const now = Date.now();
   const bed = new Date(now + 2 * HOUR);
-  const bedtime = `${String(bed.getHours()).padStart(2, "0")}:${String(bed.getMinutes()).padStart(2, "0")}`;
+  const bedtime = hhmmKST(bed);
   const drink = data.drinks.find((d) => d.id === "mega-iced-americano-l");
   await db.user.create({
     data: {
