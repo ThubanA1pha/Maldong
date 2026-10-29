@@ -1,5 +1,8 @@
 /* ⑧ 미리 보기 전용 모양. 색·글꼴·간격은 app/globals.css 토큰만, 그림은 public/ 공통 에셋만 쓴다. */
-.screen { padding-bottom: 156px; }
+/* 아래 고정 버튼 영역(버튼 2개 + 여백) 높이만큼 목록 아래를 비워, 마지막 카드가 가려지지 않게 한다 */
+.screen { padding-bottom: calc(170px + env(safe-area-inset-bottom, 0px)); }
+/* 보조 버튼: 흐린 링크가 아니라 테두리·배경이 있는 실제 버튼. 고르기 전에는 .btn:disabled로 흐리게 */
+.secondary { border: 1.5px solid var(--accent); background: var(--surface); color: var(--accent-strong); }
 /* 공통 TopBar·Scene(components/Scene)을 화면 폭 끝까지 붙인다 */
 .topbar { margin: -20px -16px 0; }
 .topbar header { grid-template-columns: 40px minmax(0, 1fr) 40px; }
