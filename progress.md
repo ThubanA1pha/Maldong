@@ -3,8 +3,8 @@
 ## 현재 상태
 
 - 실제 서비스 저장소 폴더: C:\loopthon\Maldong (안내 키트는 C:\loopthon\loopthon-starter)
-- 현재 단계 / 다음 행동: 1단계 마무리. loopthon-bot 설치 대기 → 설치 후 레포 URL 다시 저장해 접근 ok 확인 → 학생이 이어 가자고 하면 2단계(종이 기록 받기)
-- 학생에게 확인할 내용: loopthon-bot 앱을 Maldong 저장소에만 설치했는지
+- 현재 단계 / 다음 행동: 1단계 완료. 학생이 이어 가자고 하면 2단계(종이 문제정의 기록 받기)
+- 학생에게 확인할 내용: 2단계 시작 시 종이 기록(채팅으로 옮겨 적기 또는 사진)
 - 이 컴퓨터 상태: GitHub CLI 설치함. Docker 미설치(3단계 전에 필요)
 
 ## 1. GitHub 준비
@@ -12,14 +12,14 @@
 - [x] 기존 저장소·브랜치·remote와 로그인 확인
 - [x] 학생과 저장소 이름 합의 (답을 받기 전에는 생성하지 않음)
 - [x] 팀의 private 레포 생성 또는 기존 레포 확인
-- [ ] loopthon-bot 앱을 팀 레포에 설치 (https://github.com/apps/loopthon-bot/installations/new, 팀 레포만 선택)
+- [x] loopthon-bot 앱을 팀 레포에 설치 (https://github.com/apps/loopthon-bot/installations/new, 팀 레포만 선택)
 - [x] 팀 코드로 대시보드 API 로그인(`data.teamId`), 레포 URL을 HTTP로 저장(`data.team.repoUrl`) 확인. 팀 코드로는 화면에 들어갈 수 없음
 - [x] 사이트에 등록한 레포를 실제 작업 폴더로 clone, remote·기본 브랜치 확인
 - [x] .gitignore / .env.example / README 준비(`.env`·`node_modules/`·`.next/`·`dist/`·`build/` 제외, 큰 데이터 파일 커밋 안 함. 파일이 너무 많으면 저장소를 읽지 못함)
 - [x] 준비 파일 commit/push 확인
-- [ ] 앱 설치 후 읽기 권한 확인 (5분 자동 재확인, 즉시 확인은 같은 레포 URL 다시 저장)
+- [x] 앱 설치 후 읽기 권한 확인 (5분 자동 재확인, 즉시 확인은 같은 레포 URL 다시 저장)
 - 저장소 URL / 기본 브랜치 / commit SHA: https://github.com/ThubanA1pha/Maldong (private) / main / 준비 파일 commit은 git log 참고
-- 사이트 등록 결과 / loopthon-bot 설치·접근 상태: 팀 ID 17, repoUrl 저장 성공(2026-10-29). 접근 검사 결과 denied. 학생이 설치했다고 답한 뒤 다시 저장해도 denied(2회) → 설치 화면에서 Maldong 선택 여부 확인 요청
+- 사이트 등록 결과 / loopthon-bot 설치·접근 상태: 팀 ID 17, repoUrl 저장 성공(2026-10-29). loopthon-bot 설치 완료, 접근 검사 ok(repoAccessOk true)
 
 ## 2. 문제정의 기록 → 문제 다지기 → 해법 찾기 → 기능 명세
 
