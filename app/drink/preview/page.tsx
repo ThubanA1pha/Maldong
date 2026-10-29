@@ -4,10 +4,10 @@
 // 고정 문구(lib/copy.ts)와 버튼 이동은 바꾸지 않는다. 비교는 저장하지 않고, [이 양으로 마시기 시작]을 눌러야 기록한다.
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { Bubble, CharacterFace } from "@/components/Character";
-import type { Band, Option } from "@/lib/caffeine";
+import { Scene, TopBar } from "@/components/Scene";
+import { isPastBedtime, type Band, type Option } from "@/lib/caffeine";
 import { api } from "@/lib/client";
-import { BAND_TEXT, BTN, OPTION_LABEL, SAY } from "@/lib/copy";
+import { BAND_TEXT, BTN, HOME, OPTION_LABEL, SAY } from "@/lib/copy";
 import s from "./preview.module.css";
 
 type Preview = {
@@ -30,24 +30,9 @@ const OPTION_SUB: Partial<Record<Option, string>> = {
   decaf: "디카페인 원두로",
 };
 
-function Header({ onBack }: { onBack: () => void }) {
-  return (
-    <div className={s.header}>
-      <button className={s.back} onClick={onBack} aria-label="뒤로">‹</button>
-      <h1 className={s.headerTitle}>미리 보기</h1>
-      <span />
-    </div>
-  );
-}
-
-function Scene({ band, line }: { band: Band; line: string }) {
-  return (
-    <div className={s.scene}>
-      <img className={s.bg} src="/home/night.svg" alt="" />
-      <div className={s.talk}><Bubble>{line}</Bubble></div>
-      <div className={s.char}><CharacterFace band={band} size={92} /></div>
-    </div>
-  );
+// 공통 상단바. 뒤로 가기는 음료 고르기 처음으로 간다(공통 TopBar는 주소로 이동한다).
+function Header() {
+  return <div className={s.topbar}><TopBar title="미리 보기" back="/drink/select?mode=before" /></div>;
 }
 
 function PreviewScreen() {
@@ -79,12 +64,10 @@ function PreviewScreen() {
       .catch((e: Error) => setLoadError(e.message));
   }, [drinkId, situation, bedtime, attempt]);
 
-  const back = () => router.back();
-
   if (!data) {
     return (
       <main className="screen">
-        <Header onBack={back} />
+        <Header />
         {loadError ? (
           <div className={s.state}>
             <p className="error" role="alert" style={{ margin: 0 }}>{loadError}</p>
@@ -116,6 +99,8 @@ function PreviewScreen() {
     .join(" ");
   const band = current?.band ?? data.beforeBand;
   const canSkip = situation === "have";
+  // 잘 시각이 이미 지난 새벽이면 계산은 "지금" 기준이다(lib/caffeine nextBedtime). 홈처럼 그 사실을 함께 알린다.
+  const late = isPastBedtime(new Date(), data.bedtime);
 
   async function start() {
     if (!current) return;
@@ -145,10 +130,12 @@ function PreviewScreen() {
 
   return (
     <main className={`screen ${s.screen}`}>
-      <Header onBack={back} />
-      <Scene band={band} line={line} />
+      <Header />
+      <div className={s.scene}><Scene scene="night" height={210} logo={false} band={band} line={line} /></div>
       <p className={s.meta}>
-        {data.drink}{data.estimated ? " (함량 추정)" : ""} · 이번에는 {data.bedtime}에 잘 예정
+        {data.drink}{data.estimated ? " (함량 추정)" : ""} · {late
+          ? `${data.bedtime}이 지나서 ${HOME.bedtimeCaption(data.bedtime, true)}으로 비교해요`
+          : `이번에는 ${data.bedtime}에 잘 예정`}
       </p>
       {stop ? (
         <div className={s.stopBanner}>

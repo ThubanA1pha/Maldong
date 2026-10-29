@@ -1,13 +1,9 @@
 /* ⑩ 확인 질문 전용 모양. 색·글꼴·간격은 app/globals.css 토큰만 쓴다. */
-.header { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; margin: -4px -4px 0; }
-.back { width: 40px; height: 40px; border: 0; background: none; color: var(--fg); font-size: 22px; cursor: pointer; border-radius: 50%; text-decoration: none; display: grid; place-items: center; }
-.headerTitle { text-align: center; font-size: 16px; font-weight: 700; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* 낮 초원 장면: 홈과 같은 public/home/day.svg 위에 솜이(지침)와 말풍선 */
-.scene { position: relative; margin: 0 -16px; padding: 18px 16px 10px; min-height: 176px; display: flex; align-items: flex-end; gap: 8px; overflow: hidden; }
-.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
-.char { position: relative; z-index: 1; flex: none; }
-.talk { position: relative; z-index: 1; flex: 1; align-self: center; }
+/* 공통 TopBar·Scene(components/Scene)을 화면 폭 끝까지 붙인다 */
+.topbar { margin: -20px -16px 0; }
+.topbar header { grid-template-columns: 40px minmax(0, 1fr) 40px; }
+.topbar h1 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scene { margin: 0 -16px; }
 
 .card { box-shadow: 0 2px 0 var(--shadow); display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 16px; border-radius: var(--radius); background: var(--surface); }
 .card[data-locked="true"] { opacity: .55; }
@@ -21,3 +17,5 @@
 .sleepBtn:disabled { cursor: default; }
 .hint { margin: 0; font-size: 13px; color: var(--muted); }
 .state { display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: var(--radius); background: var(--surface); }
+.skeleton { height: 110px; border-radius: var(--radius); background: var(--chip); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .55; } }
