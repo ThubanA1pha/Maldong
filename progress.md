@@ -3,7 +3,7 @@
 ## 현재 상태
 
 - 실제 서비스 저장소 폴더: C:\loopthon\Maldong (안내 키트는 C:\loopthon\loopthon-starter)
-- 현재 단계 / 다음 행동 (10/30 03시): 5·6단계 진행 중. 화면 10개 구현, 로그아웃 있음, 빈 DB docker에서 E2E S1~S8 8/8 통과(b33fd73), 음료 공식 값 23개, 입력 검사 400. 다음: 배포 Git 연결(releaseId가 main 커밋 SHA가 되게), 대회 사이트 배포 URL UP 확인
+- 현재 단계 / 다음 행동 (10/30 04:30): 5·6단계 진행 중. 화면 10개 구현, 로그아웃 있음, 빈 DB docker에서 E2E S1~S8 8/8 통과(299c4a8), 음료 공식 값 23개, 입력 검사 400, 배포 /__health의 releaseId가 main 커밋 SHA와 같음(299c4a8). 다음: 지운 기록 [되돌리기]와 오류 말풍선을 화면에 연결
 - 학생에게 확인할 내용: 배포 담당과 계정, 음료 공개 함량 표는 공식 값 23개로 반영 완료(b33fd73, 각 브랜드 공식 홈페이지 2026-10-30 확인)
 - 이 컴퓨터 상태: GitHub CLI, Docker 설치함
 - 팀 공지·점검 결과: main이 아니라 notes 브랜치의 NOTES.md
@@ -37,7 +37,7 @@
 - [x] 학생이 개인 로그인으로 우리 팀 → 문제 정의를 열어 캔버스 표시 확인(Agent는 화면을 열 수 없음, 약 1분 캐시)
 - [ ] 핵심 사용자 흐름·기능별 동작 규칙·완료 조건·제외 범위를 팀과 확인
 - [x] 로그인 필요 여부와 역할 이름(흐름 account·docker 시드 계정 역할 이름으로 씀) 결정 (design_decision 6, 계정 "학생")
-- [ ] 첫 화면에서 알려 줄 것(로그인하지 않은 사람이 `/`에서 볼 서비스 이름·하는 일)을 학생과 정함
+- [x] 첫 화면에서 알려 줄 것(로그인하지 않은 사람이 `/`에서 볼 서비스 이름·하는 일)을 학생과 정함
 - [x] 주 사용 플랫폼(desktop·mobile·both)과 실제 사용 장면에 근거한 platformReason 작성 (mobile)
 - [x] 사용자 핵심 흐름 3~8개를 scenarios.example.yaml 참고해 docs/scenarios.yaml에 작성(steps는 화면의 메뉴·버튼 이름으로 한 줄에 한 동작, 로그인 흐름은 account 지정), YAML 파서로 형식 확인 후 기본 브랜치 push
 - [ ] 서비스의 AI 호출 필요 여부 확인
@@ -52,8 +52,8 @@
 - [x] 환경변수 이름 그대로(RELEASE_ID·SEED_USER_*·AI_GATEWAY_API_KEY), 시드 계정 값은 `${}` 없이 직접 적음
 - [x] 빈 DB에서 `docker compose up --build`만으로 앱·시드 데이터가 2분 안에 뜸(docker를 못 쓰면 GitHub Actions 결과로 확인)
 - [ ] README 설치·빌드·실행 안내와 환경변수 표(이름·용도·설정 위치)
-- [ ] GET /__health가 인증·리다이렉트 없이 200 응답(docker 앱·배포 둘 다, Next.js는 app/%5F%5Fhealth), 실제 배포 commit을 releaseId로 제공
-- [ ] 공개 HTTPS URL 첫 배포(발표용, 배포용 DB는 학생 확인 후 무료 등급)
+- [x] GET /__health가 인증·리다이렉트 없이 200 응답(docker 앱·배포 둘 다, Next.js는 app/%5F%5Fhealth), 실제 배포 commit을 releaseId로 제공
+- [x] 공개 HTTPS URL 첫 배포(발표용, 배포용 DB는 학생 확인 후 무료 등급)
 - [ ] CI 실제 검사(workflows/scenarios.yml 복사)와 성공 뒤 자동 배포 연결, 실제 push로 확인
 - [ ] Agent가 대시보드 배포 URL 저장, UP·배포 commit 일치 확인
 - 배포 URL / CI·배포 링크 / 첫 배포 commit SHA: 배포 미등록. /__health는 docker 앱에서만 200 확인. CI 파일(.github/workflows/scenarios.yml)은 있으나 자동 배포 연결 없음
@@ -72,12 +72,12 @@
 
 ## 5. 핵심 기능 구현
 
-- [ ] (로그인이 있으면) 회원가입·로그인·로그아웃·역할별 권한 검사 구현, 아이디/비밀번호로 바로 로그인 가능
-- [ ] 로그인하지 않은 사람이 `/`를 열면 서비스 이름과 하는 일이 보임(`/`를 로그인 화면으로 보내거나 로그인 칸만 두지 않음)
-- [ ] 핵심 입력 → 실제 처리 → 결과 → 다음 행동 구현
+- [x] (로그인이 있으면) 회원가입·로그인·로그아웃·역할별 권한 검사 구현, 아이디/비밀번호로 바로 로그인 가능
+- [x] 로그인하지 않은 사람이 `/`를 열면 서비스 이름과 하는 일이 보임(`/`를 로그인 화면으로 보내거나 로그인 칸만 두지 않음)
+- [x] 핵심 입력 → 실제 처리 → 결과 → 다음 행동 구현
 - [ ] features의 동작 규칙·완료 조건과 대조, 새 기능은 features에 먼저 추가
 - [ ] 화면 다듬기(문구·배치·빈 화면 안내·시각)는 학생이 정한 방향 안에서 Agent가 만들어 보여 주고 학생이 고름
-- [ ] docs/scenarios.yaml의 메뉴·버튼 이름이 실제 화면과 같은지 확인, 화면 이름을 바꾸면 흐름·spec도 같은 commit에서 수정
+- [x] docs/scenarios.yaml의 메뉴·버튼 이름이 실제 화면과 같은지 확인, 화면 이름을 바꾸면 흐름·spec도 같은 commit에서 수정
 - [ ] 로그인 전에는 로그인 필요 화면이 열리지 않음, 없는 주소는 404(500 아님), 주 사용 플랫폼 화면 폭에서 깨지지 않음
 - [ ] 실패 처리와 의미 있는 테스트, 실행한 검사 결과 기록
 - [ ] 의미 있는 변경 commit/push, CI·자동 배포 결과 확인
@@ -86,10 +86,10 @@
 ## 6. 흐름 E2E
 
 - [ ] 키트 e2e/를 저장소 e2e/로 복사, platform에 맞는 project만 남김
-- [ ] 흐름마다 e2e/scenarios/<id>.spec.ts 하나(id와 같은 파일 이름), 파일마다 test 하나
+- [x] 흐름마다 e2e/scenarios/<id>.spec.ts 하나(id와 같은 파일 이름), 파일마다 test 하나
 - [ ] steps를 같은 순서의 화면 조작으로 spec 본문에 옮김(API 호출 없음), 다른 역할 단계는 새 창(context)으로 로그인, 회원가입 이메일은 실행마다 다르게
 - [ ] page.goto는 창마다 처음 한 번만(로그인 화면으로 가는 goto만 예외), 회원가입은 첫 화면에서 눌러 가거나 회원가입 주소 하나만, 도우미 함수는 test보다 위에
-- [ ] 마지막에 expected 결과를 expect로 확인(화면이 열렸는지만 보지 않음)
+- [x] 마지막에 expected 결과를 expect로 확인(화면이 열렸는지만 보지 않음)
 - [ ] test.skip·test.fixme·test.only·조건부 return·실패를 삼키는 try/catch 없음
 - [ ] page.route·route.fulfill·routeFromHAR·routeWebSocket·addInitScript·화면 글자를 바꾸는 page.evaluate 없음
 - [ ] 흐름에 필요한 선행 데이터는 앱 시드로, 업로드 자료는 e2e/fixtures/에 커밋, 앞 흐름이 만든 데이터에 기대지 않음
