@@ -26,7 +26,6 @@ export const BTN = {
   no: "아니",
   answer: "답하기",
   cafeLook: "뭐 마실지 볼래",
-  close: "닫기",
   undo: "되돌리기",
   cafeDismiss: "괜찮아",
 } as const;
@@ -54,7 +53,6 @@ export const Q = {
   deleteConfirm: "이 기록을 지울까?",
   howMuch: "아까 커피 얼마나 마셨어?",
   sleep: "잘 잤어?",
-  situation: "지금 이 커피는?",
 } as const;
 
 export const PORTION_ANSWER = { all: "다", half: "반", little: "조금", none: "안 마심" } as const;
@@ -118,7 +116,6 @@ export const PREVIEW = {
   title: "미리 보기",
   recommendTag: "추천 양",
   recommendStopTag: "추천 양 · 오늘은 여기까지",
-  nowMg: (n: number) => `지금 약 ${n}mg`,
   optionSub: {
     full: "한 잔 다",
     half: "나머지는 내일 아침에",
@@ -136,7 +133,6 @@ export const PREVIEW = {
   noDrink: "고른 음료가 없어요. 음료부터 다시 골라 주세요.",
   pickOption: "선택지를 하나 골라 주세요",
   pickBeforeDrink: "그래도 마신다면 선택지를 먼저 골라 주세요",
-  bedMg: (hhmm: string, n: number) => `${hhmm}에 약 ${n}mg`,
 } as const;
 
 // ⑩ 확인 질문 (p5 요청 문구)
