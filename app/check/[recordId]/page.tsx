@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Scene, TopBar } from "@/components/Scene";
 import { requireUser } from "@/lib/auth";
+import { CHECK } from "@/lib/copy";
 import { home } from "@/lib/service";
 import { CheckForm } from "./CheckForm";
 import s from "./check.module.css";
@@ -16,15 +17,16 @@ export default async function Check({ params }: { params: Promise<{ recordId: st
 
   return (
     <main className="screen">
-      <div className={s.topbar}><TopBar title={pending ? `어제 ${pending.drink}` : "확인 질문"} back="/home" /></div>
+      <div className={s.topbar}><TopBar title={pending ? `어제 ${pending.drink}` : CHECK.title} back="/home" /></div>
       <div className={s.scene}>
         <Scene
           scene="day"
           height={250}
+          anchor="bottom"
           logo={false}
           band="mid"
           mood="tired"
-          line={pending ? "하나씩 물어볼게" : "이 기록은 이미 답했거나 찾을 수 없어요."}
+          line={pending ? CHECK.bubble : CHECK.gone}
         />
       </div>
 
@@ -32,8 +34,8 @@ export default async function Check({ params }: { params: Promise<{ recordId: st
         <CheckForm recordId={recordId} />
       ) : (
         <div className={s.state}>
-          <p className="muted" style={{ margin: 0 }}>홈에서 남아 있는 확인 카드를 다시 골라 주세요.</p>
-          <Link className="btn" href="/home">홈으로</Link>
+          <p className="muted" style={{ margin: 0 }}>{CHECK.goneHelp}</p>
+          <Link className="btn" href="/home">{CHECK.home}</Link>
         </div>
       )}
     </main>

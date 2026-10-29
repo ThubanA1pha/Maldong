@@ -7,7 +7,7 @@ import { Suspense, useEffect, useState } from "react";
 import { Scene, TopBar } from "@/components/Scene";
 import { isPastBedtime, type Band, type Option } from "@/lib/caffeine";
 import { api } from "@/lib/client";
-import { BAND_TEXT, BTN, HOME, OPTION_LABEL, SAY } from "@/lib/copy";
+import { BAND_TEXT, BTN, HOME, OPTION_LABEL, PREVIEW, SAY } from "@/lib/copy";
 import s from "./preview.module.css";
 
 type Preview = {
@@ -20,19 +20,9 @@ type Preview = {
   options: { option: Option; drinkId: string; addedMg: number; totalMg: number; band: Band }[];
 };
 
-// 선택지 아래 한 줄 설명 (피그마 문구)
-const OPTION_SUB: Partial<Record<Option, string>> = {
-  full: "한 잔 다",
-  half: "나머지는 내일 아침에",
-  third: "몇 모금만",
-  small: "한 단계 작은 사이즈로",
-  halfshot: "샷 절반 · 원래대로의 절반",
-  decaf: "디카페인 원두로",
-};
-
 // 공통 상단바. 뒤로 가기는 음료 고르기 처음으로 간다(공통 TopBar는 주소로 이동한다).
 function Header() {
-  return <div className={s.topbar}><TopBar title="미리 보기" back="/drink/select?mode=before" /></div>;
+  return <div className={s.topbar}><TopBar title={PREVIEW.title} back="/drink/select?mode=before" /></div>;
 }
 
 function PreviewScreen() {
@@ -51,7 +41,7 @@ function PreviewScreen() {
 
   useEffect(() => {
     if (!drinkId) {
-      setLoadError("고른 음료가 없어요. 음료부터 다시 골라 주세요.");
+      setLoadError(PREVIEW.noDrink);
       return;
     }
     setLoadError(null);
@@ -72,14 +62,14 @@ function PreviewScreen() {
           <div className={s.state}>
             <p className="error" role="alert" style={{ margin: 0 }}>{loadError}</p>
             {drinkId ? (
-              <button className="btn" onClick={() => setAttempt((n) => n + 1)}>다시 계산하기</button>
+              <button className="btn" onClick={() => setAttempt((n) => n + 1)}>{PREVIEW.retry}</button>
             ) : (
-              <button className="btn" onClick={() => router.push("/drink/select?mode=before")}>음료 고르기</button>
+              <button className="btn" onClick={() => router.push("/drink/select?mode=before")}>{PREVIEW.pickDrink}</button>
             )}
           </div>
         ) : (
           <>
-            <p className="muted" role="status">계산하는 중이에요…</p>
+            <p className="muted" role="status">{PREVIEW.calculating}</p>
             <div className={s.skeleton} />
             <div className={s.skeleton} />
             <div className={s.skeleton} />
@@ -94,7 +84,9 @@ function PreviewScreen() {
   const maxMg = Math.max(1, ...data.options.map((o) => o.addedMg));
   // 추천 양은 오늘 이미 마신 기록까지 더한 계산(lib/service preview)에서 온다. 선택지를 바꿔도 말풍선에 남긴다.
   const rec = data.recommend === "stop" ? SAY.recommendStop : data.recommend ? SAY.recommend(OPTION_LABEL[data.recommend]) : null;
-  const line = (changed ? [SAY.recalculated, rec] : [stop ? SAY.again : null, SAY.compare(data.bedtime), rec])
+  // "또 마시는 거야…?"는 이번 음료를 더하기 전에 이미 많이 남았을 때만 말한다(오늘 0잔이면 큰 음료여도 "또"가 아니다).
+  const again = data.beforeBand === "high";
+  const line = (changed ? [SAY.recalculated, rec] : [again ? SAY.again : null, SAY.compare(data.bedtime), rec])
     .filter(Boolean)
     .join(" ");
   const band = current?.band ?? data.beforeBand;
@@ -121,7 +113,7 @@ function PreviewScreen() {
 
   const startBtn = (
     <button key="start" className={`btn ${stop && canSkip ? s.secondary : "primary"}`} disabled={busy || !current} onClick={start}>
-      {busy ? "기록하는 중이에요…" : BTN.startDrinking}
+      {busy ? PREVIEW.recording : BTN.startDrinking}
     </button>
   );
   const skipBtn = canSkip ? (
@@ -133,14 +125,13 @@ function PreviewScreen() {
       <Header />
       <div className={s.scene}><Scene scene="night" height={160} logo={false} band={band} line={line} /></div>
       <p className={s.meta}>
-        {data.drink}{data.estimated ? " (함량 추정)" : ""} · {late
-          ? `${data.bedtime}이 지나서 ${HOME.bedtimeCaption(data.bedtime, true)}으로 비교해요`
-          : `이번에는 ${data.bedtime}에 잘 예정`}
+        {data.drink}{data.estimated ? " (함량 추정)" : ""} · {late ? PREVIEW.late(data.bedtime) : PREVIEW.plan(data.bedtime)}
       </p>
       {stop ? (
         <div className={s.stopBanner}>
-          <span>추천 양 · {SAY.recommendStop}</span>
-          <span className={s.stopBadge}>지금 약 {data.beforeMg}mg</span>
+          <span>{PREVIEW.recommendStopTag}</span>
+          {/* beforeMg는 지금이 아니라 잘 시각에 남을 양이다. 잘 시각이 지났으면 지금 기준 */}
+          <span className={s.stopBadge}>{HOME.bedtimeCaption(data.bedtime, late)} {data.beforeMg}mg</span>
         </div>
       ) : null}
       <div className={s.options} role="group" aria-label="선택지">
@@ -151,18 +142,18 @@ function PreviewScreen() {
               key={o.option}
               className={s.option}
               aria-pressed={o.option === current?.option}
-              aria-label={`${OPTION_LABEL[o.option]}${isRec ? " (추천 양)" : ""} · 이 음료로 ${data.bedtime}에 더해지는 카페인 ${o.addedMg}mg · ${BAND_TEXT[o.band]}`}
+              aria-label={`${OPTION_LABEL[o.option]}${isRec ? ` (${PREVIEW.recommendTag})` : ""} · 이 음료로 ${data.bedtime}에 더해지는 카페인 ${o.addedMg}mg · ${BAND_TEXT[o.band]}`}
               disabled={busy}
               onClick={() => { setSelected(o.option); setChanged(true); setError(null); }}
               data-added-mg={o.addedMg}
             >
               <span className={s.optTop}>
                 <span className={s.optName}>{OPTION_LABEL[o.option]}</span>
-                {isRec ? <span className={s.recBadge}>추천 양</span> : null}
+                {isRec ? <span className={s.recBadge}>{PREVIEW.recommendTag}</span> : null}
                 <span className={s.radio} aria-hidden />
               </span>
               <span className={s.optSub}>
-                {o.option === "original" ? data.drink : OPTION_SUB[o.option]}
+                {o.option === "original" ? data.drink : PREVIEW.optionSub[o.option]}
               </span>
               <span className={s.bar} aria-hidden>
                 <span className={s.barFill} style={{ width: `${Math.round((o.addedMg / maxMg) * 100)}%` }} />
@@ -175,7 +166,7 @@ function PreviewScreen() {
           );
         })}
       </div>
-      {!current ? <p className={s.hint}>{stop ? "그래도 마신다면 선택지를 먼저 골라 주세요" : "선택지를 하나 골라 주세요"}</p> : null}
+      {!current ? <p className={s.hint}>{stop ? PREVIEW.pickBeforeDrink : PREVIEW.pickOption}</p> : null}
       {error ? <p className="error" role="alert">{error}</p> : null}
       <div className="bottom"><div>
         {stop && canSkip ? [skipBtn, startBtn] : [startBtn, skipBtn]}
