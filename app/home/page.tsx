@@ -111,7 +111,7 @@ async function HomeBody({ userId, notice }: { userId: string; notice?: string })
             <Link className={s.todayLink} href="/today">
               {linkPre}<span className="mono">{data.todayCount}</span>{linkPost}
             </Link>
-            <p className={s.cardSub}>{last ? HOME.lastRecord(hhmm(last.startedAt), last.label.split(" · ")[0]) : SAY.empty}</p>
+            <p className={s.cardSub}>{last ? HOME.lastRecord(hhmm(last.startedAt), last.label) : SAY.empty}</p>
           </div>
           <img className={s.chev} src="/home/chevron.svg" alt="" width={18} height={18} />
         </section>
