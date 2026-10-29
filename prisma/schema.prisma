@@ -1,4 +1,4 @@
-// [공통] 데이터 모양. 바꾸려면 통합 담당에게 요청한다. 필드 뜻은 docs/build_spec.md 4절과 CONTEXT.md.
+// [공통] 데이터 모양. 바꾸려면 통합 담당에게 요청한다. 필드 뜻은 docs/build_spec.md 4절.
 generator client {
   provider = "prisma-client-js"
 }
