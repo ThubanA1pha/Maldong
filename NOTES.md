@@ -35,6 +35,12 @@
 
 ---
 
+## 사람 답 대기 🙋 (지어내지 않는다)
+
+- 팀원 B: 마감 때 저녁 커피로 잠을 설치는 날이 얼마나 자주 있나(예: 일주일에 며칠). 답을 받기 전까지 problem.yaml에는 빈도를 쓰지 않고 [미기록]으로 둔다.
+
+---
+
 ## 담당별 할 일 (에이전트에게 그대로 붙여 넣기)
 
 공통으로 먼저: `git pull --rebase origin main` → 이 파일 → main `AGENTS.md` → `OWNERS.json`(내 번호) → `docs/scenarios.yaml`(내 흐름) → `lib/copy.ts` → `docs/build_spec.md` → `app/globals.css` 순서로 읽고, **고치기 전에 "main 기준과 내 화면이 어긋난 점" 목록부터** 사람에게 보여 준다(문구·이동 주소·토큰·공통 부품·steps 순서). 공통 파일은 고치지 않는다.
