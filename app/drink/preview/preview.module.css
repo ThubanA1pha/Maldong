@@ -1,40 +1,41 @@
-/* ⑧ 미리 보기 전용 모양. 색·글꼴·간격은 app/globals.css 토큰만 쓴다. */
+/* ⑧ 미리 보기 전용 모양. 색·글꼴·간격은 app/globals.css 토큰만, 그림은 public/ 공통 에셋만 쓴다. */
+.screen { padding-bottom: 156px; }
 .header { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; margin: -4px -4px 0; }
 .back { width: 40px; height: 40px; border: 0; background: none; color: var(--fg); font-size: 22px; cursor: pointer; border-radius: 50%; }
 .headerTitle { text-align: center; font-size: 17px; font-weight: 700; margin: 0; }
 
-.screen { padding-bottom: 156px; }
-.scene { position: relative; margin: 0 -16px; padding: 18px 16px 16px; min-height: 170px; background: var(--fg); color: var(--accent-fg); display: flex; align-items: flex-end; gap: 12px; overflow: hidden; }
-.moon { position: absolute; top: 14px; right: 18px; width: 34px; height: 34px; border-radius: 50%; background: var(--mid); box-shadow: inset -12px -6px 0 0 color-mix(in srgb, var(--mid) 55%, var(--fg)); opacity: .9; }
-.bubble { position: relative; z-index: 1; flex: 1; margin: 0; padding: 12px 14px; border-radius: var(--radius); background: var(--surface); color: var(--fg); font-weight: 700; line-height: 1.45; word-break: keep-all; align-self: center; }
-.char { position: relative; z-index: 1; flex: 0 0 auto; transform: scale(.78); transform-origin: right center; color: var(--fg); }
+/* 밤하늘 장면: 홈과 같은 public/home/night.svg 위에 말풍선과 솜이 */
+.scene { position: relative; margin: 0 -16px; padding: 18px 16px 10px; min-height: 186px; display: flex; align-items: flex-end; gap: 8px; overflow: hidden; }
+.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
+.talk { position: relative; z-index: 1; flex: 1; align-self: center; }
+.char { position: relative; z-index: 1; flex: none; }
 
 .meta { margin: 0; font-size: 13px; color: var(--muted); }
 
-.stopBanner { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 12px; background: var(--fg); color: var(--accent-fg); font-size: 14px; font-weight: 700; }
+.stopBanner { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius-sm); background: var(--fg); color: var(--accent-fg); font-size: 14px; font-weight: 700; }
 .stopBadge { padding: 3px 8px; border-radius: 8px; background: var(--mid); color: var(--fg); font-size: 12px; white-space: nowrap; }
 
 .options { display: flex; flex-direction: column; gap: 10px; }
-.option { display: block; width: 100%; text-align: left; padding: 14px 16px; border-radius: var(--radius); border: 1.5px solid transparent; background: var(--surface); color: var(--fg); cursor: pointer; }
-.option[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, var(--surface)); }
+.option { display: block; width: 100%; text-align: left; padding: 14px 16px; border-radius: var(--radius); border: 1.5px solid transparent; background: var(--surface); color: var(--fg); cursor: pointer; box-shadow: 0 2px 0 var(--shadow); }
+.option[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .option:disabled { cursor: default; }
 .optTop { display: flex; align-items: center; gap: 6px; }
 .optName { font-size: 17px; font-weight: 700; }
 .recBadge { padding: 2px 7px; border-radius: 6px; background: var(--accent); color: var(--accent-fg); font-size: 11px; font-weight: 700; }
-.radio { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); flex: 0 0 auto; }
+.radio { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); flex: none; }
 .option[aria-pressed="true"] .radio { border-color: var(--accent); box-shadow: inset 0 0 0 4px var(--surface); background: var(--accent); }
-.optSub { margin: 2px 0 8px; font-size: 12px; color: var(--muted); }
-.bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
-.barFill { height: 100%; border-radius: 999px; background: color-mix(in srgb, var(--mid) 55%, var(--surface)); }
+.optSub { display: block; margin: 2px 0 8px; font-size: 12px; color: var(--muted); }
+.bar { display: block; height: 6px; border-radius: 999px; background: var(--chip); overflow: hidden; }
+.barFill { display: block; height: 100%; border-radius: 999px; background: var(--mid); }
 .option[aria-pressed="true"] .barFill { background: var(--accent); }
 .optBottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--muted); }
-.mg { font-weight: 700; color: var(--fg); white-space: nowrap; }
-.pill { flex: 0 0 auto; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
-.pill_ok { background: color-mix(in srgb, var(--ok) 14%, var(--surface)); color: var(--ok); }
-.pill_mid { background: color-mix(in srgb, var(--mid) 16%, var(--surface)); color: var(--mid); }
-.pill_high { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--accent); }
+.mg { font-family: var(--font-mono); font-weight: 700; color: var(--fg); white-space: nowrap; }
+.pill { flex: none; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; color: var(--fg); }
+.pill_ok { background: var(--ok); }
+.pill_mid { background: var(--mid); }
+.pill_high { background: var(--high); color: var(--accent-fg); }
 
-.skeleton { height: 96px; border-radius: var(--radius); background: color-mix(in srgb, var(--line) 60%, var(--surface)); animation: pulse 1.2s ease-in-out infinite; }
+.skeleton { height: 96px; border-radius: var(--radius); background: var(--chip); animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .55; } }
 .state { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: var(--radius); background: var(--surface); }
 .hint { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
