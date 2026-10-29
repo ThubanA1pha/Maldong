@@ -23,6 +23,8 @@ import s from "./select.module.css";
 type Drink = { id: string; brand: string; menu: string; size: string; caffeineMg: number; estimated: boolean };
 
 const isNight = (d: Date) => d.getHours() >= 19 || d.getHours() < 6;
+const BRAND_ORDER = ["메가커피", "컴포즈커피", "빽다방", "스타벅스"]; // Figma 탭 순서
+const rank = (b: string) => (BRAND_ORDER.indexOf(b) + BRAND_ORDER.length + 1) % (BRAND_ORDER.length + 1);
 
 function Select() {
   const router = useRouter();
@@ -40,7 +42,7 @@ function Select() {
     setNight(isNight(new Date()));
     api<Drink[]>("/api/drinks").then(setDrinks).catch((e: Error) => setError(e.message));
   }, []);
-  const brands = useMemo(() => [...new Set((drinks ?? []).map((d) => d.brand))], [drinks]);
+  const brands = useMemo(() => [...new Set((drinks ?? []).map((d) => d.brand))].sort((a, b) => rank(a) - rank(b)), [drinks]);
   const menusOf = (b: string) => [...new Set((drinks ?? []).filter((d) => d.brand === b).map((d) => d.menu))];
   const sizes = (drinks ?? []).filter((d) => `${d.brand} ${d.menu}` === menu);
   const currentBrand = activeBrand ?? brands[0];
@@ -56,7 +58,7 @@ function Select() {
     if (!list) return;
     let current = brands[0];
     for (const el of list.querySelectorAll<HTMLElement>("[data-brand]")) {
-      if (el.offsetTop - list.offsetTop <= list.scrollTop + 8) current = el.dataset.brand ?? current;
+      if (el.offsetTop - list.offsetTop <= list.scrollTop + list.clientHeight / 3) current = el.dataset.brand ?? current;
     }
     setActiveBrand(current);
   }
@@ -96,7 +98,7 @@ function Select() {
       </div>
       <div className={s.scrim} aria-hidden />
 
-      <section className={s.sheet} aria-labelledby="sheet-title">
+      <section className={`${s.sheet} ${mode === "already" ? s.already : ""}`} aria-labelledby="sheet-title">
         <div className={s.handle} aria-hidden />
         <h1 id="sheet-title" className={s.title}>{mode === "already" ? BTN.alreadyDrank : "뭐 마시려고?"}</h1>
         {mode === "already" ? <p className={s.sub}>다 마신 것으로 저장돼요</p> : null}
@@ -120,7 +122,7 @@ function Select() {
                     const key = `${b} ${m}`;
                     const on = key === menu;
                     return (
-                      <button key={key} className={s.item} aria-label={key} aria-pressed={on} onClick={() => { setMenu(key); setPicked(null); }}>
+                      <button key={key} className={s.item} aria-label={key} aria-pressed={on} onClick={() => { setMenu(key); setPicked(null); setActiveBrand(b); }}>
                         {m}
                         {on ? <img src={check.src} alt="" /> : null}
                       </button>

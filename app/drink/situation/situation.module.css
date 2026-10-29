@@ -13,7 +13,7 @@
   position: absolute; background: var(--surface); border-radius: 18px; padding: 13px 15px 9px;
   filter: drop-shadow(0 4px 0 var(--shadow-soft));
   font-family: var(--font-display); font-size: 16.5px; line-height: 22.275px; color: var(--fg);
-  margin: 0; font-weight: 400;
+  margin: 0; font-weight: 400; word-break: keep-all;
 }
 
 .options { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 0; }
