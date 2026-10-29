@@ -46,6 +46,11 @@ export function nextBedtime(now: Date, hhmm: string): Date {
   return t;
 }
 
+// 잘 시각이 이미 지나 nextBedtime이 "지금"을 돌려주는 때(예: 01:00 예정인데 지금 01:30). 홈은 이때 "지금 남은 양"이라고 말한다.
+export function isPastBedtime(now: Date, hhmm: string): boolean {
+  return nextBedtime(now, hhmm).getTime() === now.getTime();
+}
+
 export function totalAtBedtime(
   records: { mg: number; startedAt: Date }[],
   bedtime: Date,

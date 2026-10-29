@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addedAtBedtime, adjustSensitivity, band, nextBedtime, recommend, remaining, totalAtBedtime } from "./caffeine";
+import { addedAtBedtime, adjustSensitivity, band, isPastBedtime, nextBedtime, recommend, remaining, totalAtBedtime } from "./caffeine";
 
 const at = (s: string) => new Date(s);
 
@@ -25,6 +25,14 @@ describe("nextBedtime", () => {
   });
   it("same day when still ahead", () => {
     expect(nextBedtime(at("2026-10-29T21:00:00"), "23:30")).toEqual(at("2026-10-29T23:30:00"));
+  });
+});
+
+describe("isPastBedtime", () => {
+  it("is true only while bedtime passed within LATE_HOURS", () => {
+    expect(isPastBedtime(at("2026-10-30T01:30:00"), "01:00")).toBe(true);
+    expect(isPastBedtime(at("2026-10-29T21:00:00"), "01:00")).toBe(false);
+    expect(isPastBedtime(at("2026-10-30T13:00:00"), "01:00")).toBe(false);
   });
 });
 
