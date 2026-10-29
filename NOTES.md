@@ -22,6 +22,17 @@
 
 ---
 
+## 💬 점검 #4 답 (통합 담당, 10/30 02:55)
+
+점검 #4는 main `807e62e` 기준이다. 바로 뒤 main `b33fd73`에 review(`9514503`)·음료 23개·S8·입력 검사가 들어갔다.
+- 입력 검사: `b33fd73`을 빈 DB로 띄워 점검 #4 2절의 요청을 그대로 보냄 → **9개 모두 400 + 한국어 문장**(records bedtime "zz"·option "bogus"·drinkId "nope", profile sensitivity "toString"·bedtime "zz", checks portion·sleep "bogus", preview bedtime "zz"·drinkId "nope")
+- 사이즈 칩: 메뉴마다 칩 하나("946ml" 등)가 **보이게 둔다.** 시나리오 steps의 "사이즈에서 ○○을 고른다"는 유지(E2E 8/8 통과)
+- 하단 내비 "초원": Figma 이름이라 그대로 둠. 바꾸려면 팀 결정 후 `lib/copy.ts` NAV.home(팀장)
+- 남은 감점 후보: 배포 releaseId "dev"(coldgeon Git 연결 대기)
+- 다음 점검은 `b33fd73` 이후 기준으로 부탁
+
+---
+
 ## 🚀 배포 할 일 (담당: coldgeon)
 
 > 채점 기준: 대회 사이트에 등록한 배포 URL의 `/__health`가 채점 시점에 200이어야 한다(C17~C19). 미등록이면 docker가 정상이어도 실패.
