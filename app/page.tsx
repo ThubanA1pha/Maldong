@@ -1,20 +1,21 @@
-// [역산 초안] 이 화면은 docs/scenarios.yaml(S1~S7)에서 거꾸로 뽑은 최소 버전이다. 디자인 프레임이 나오면 프레임이 기준이다.
-// 고정 문구(lib/copy.ts)와 버튼 이동은 바꾸지 않는다. 배치·디자인·상태 화면은 담당이 새로 만든다.
-// 담당: ① 첫 화면 (F1 · S1)
+// 담당: ① 첫 화면 (F1 · S1). 로그인하지 않은 사람에게 서비스 이름과 하는 일을 보여 준다.
 import Link from "next/link";
-import { Character } from "@/components/Character";
-import { BTN, SERVICE_NAME, SERVICE_ONE_LINER } from "@/lib/copy";
+import { Scene } from "@/components/Scene";
+import { AUTH, BTN, SERVICE_NAME, SERVICE_ONE_LINER } from "@/lib/copy";
+import s from "./auth.module.css";
 
 export default function Landing() {
   return (
-    <main className="screen">
-      <h1 className="title">{SERVICE_NAME}</h1>
-      <p className="muted">{SERVICE_ONE_LINER}</p>
-      <Character band="ok" />
-      <div className="bottom"><div>
+    <main className={s.page}>
+      <Scene scene="night" height={420} line={AUTH.landingLine} />
+      <div className={s.body}>
+        <h1 className={s.headline}>{SERVICE_NAME}</h1>
+        <p className={s.lead}>{SERVICE_ONE_LINER}</p>
+      </div>
+      <div className={s.actions}>
         <Link className="btn primary" href="/signup">{BTN.start}</Link>
         <Link className="btn" href="/login">{BTN.login}</Link>
-      </div></div>
+      </div>
     </main>
   );
 }

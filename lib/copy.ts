@@ -9,6 +9,7 @@ export const SERVICE_ONE_LINER = "시험 기간, 커피를 마시기 직전에 �
 export const BTN = {
   start: "시작하기",
   login: "로그인",
+  logout: "로그아웃",
   signup: "가입하기",
   save: "저장",
   profile: "프로필",
@@ -96,6 +97,17 @@ export const TODAY = {
   count: (n: number) => `오늘 커피 ${n}잔`,
   countNote: "반만 마셔도 1잔으로 세요",
   deleteNote: "지우면 오늘 계산이 다시 바뀌어요",
+} as const;
+
+// ①~④ 첫 화면·가입·로그인·프로필 말풍선과 안내
+export const AUTH = {
+  landingLine: "마시기 전에\n나랑 먼저 보자!",
+  signupLine: "반가워!\n이메일이면 충분해",
+  loginLine: "다시 왔구나!",
+  profileLine: "잘 시각이랑 민감도로\n오늘 밤을 계산해",
+  sensitivityHelp: "담배를 피우면 카페인이 더 빨리, 피임약을 먹으면 더 천천히 빠질 수 있어요.",
+  sensitivityNow: "현재 민감도",
+  saved: "저장했어요",
 } as const;
 
 export const BAND_TEXT: Record<Band, string> = {

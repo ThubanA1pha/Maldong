@@ -54,7 +54,7 @@ export function AuthForm({ endpoint, submitLabel, next }: { endpoint: string; su
       {fieldErrors.password ? <p id="password-error" className="error" role="alert">{fieldErrors.password}</p> : isSignup ? <p id="password-hint" className="muted">비밀번호는 8자 이상 입력해 주세요.</p> : null}
       {error ? <p className="error" role="alert">{error}</p> : null}
       {busy ? <p role="status" className="muted">{isSignup ? "가입 정보를 저장하고 있어요." : "로그인하고 있어요."}</p> : null}
-      <div className="bottom"><div><button className="btn primary" type="submit" disabled={busy}>{submitLabel}</button></div></div>
+      <button className="btn primary" type="submit" disabled={busy} style={{ marginTop: 6 }}>{busy ? "잠시만요…" : submitLabel}</button>
     </form>
   );
 }
