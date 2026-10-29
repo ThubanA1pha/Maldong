@@ -18,17 +18,17 @@
   display: flex; flex-direction: column; gap: 10px; padding: 10px 20px calc(24px + env(safe-area-inset-bottom, 0px));
   background: var(--bg); border-radius: 28px 28px 0 0;
 }
-.handle { align-self: center; flex: none; width: 40px; height: 5px; border-radius: 3px; background: var(--handle); }
+.handle { align-self: center; flex: none; width: 40px; height: 5px; border-radius: 3px; background: var(--line); }
 .title { margin: 0; font-size: 20px; font-weight: 700; color: var(--fg); }
 .already { height: min(496px, calc(100dvh - 120px)); }
 .sub { margin: -8px 0 0; padding-top: 2px; font-size: 12px; color: var(--muted); }
 
 .tabs { flex: none; display: flex; gap: 16px; border-bottom: 1px solid var(--line); }
-.tab { border: 0; background: none; padding: 0 0 6px; margin-bottom: -1px; font-size: 14px; color: var(--muted-2); cursor: pointer; border-bottom: 3px solid transparent; }
+.tab { border: 0; background: none; padding: 0 0 6px; margin-bottom: -1px; font-size: 14px; color: var(--subtle); cursor: pointer; border-bottom: 3px solid transparent; }
 .tab[aria-selected="true"] { font-weight: 700; color: var(--fg); border-bottom-color: var(--accent); }
 
 .list { flex: 1 1 auto; min-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; }
-.group { margin: 6px 2px 0; font-size: 12px; font-weight: 700; color: var(--muted-2); }
+.group { margin: 6px 2px 0; font-size: 12px; font-weight: 700; color: var(--subtle); }
 .group:first-child { margin-top: 0; }
 .item {
   flex: none; display: flex; align-items: center; justify-content: space-between; width: 100%;
@@ -39,10 +39,10 @@
 .item img { width: 16px; height: 16px; }
 
 .label { margin: 0; padding-top: 4px; font-size: 13px; font-weight: 700; color: var(--muted); }
-.segment { flex: none; display: flex; padding: 4px; border-radius: 14px; background: var(--sunken); }
+.segment { flex: none; display: flex; padding: 4px; border-radius: 14px; background: var(--chip); }
 .size { flex: 1; border: 0; border-radius: 11px; padding: 9px 0; background: none; font-size: 14px; color: var(--muted); cursor: pointer; }
 .size[aria-pressed="true"] { background: var(--surface); font-weight: 700; color: var(--fg); }
-.hint { margin: 0; padding: 9px 0; font-size: 13px; color: var(--muted-2); text-align: center; }
+.hint { margin: 0; padding: 9px 0; font-size: 13px; color: var(--subtle); text-align: center; }
 
 .primary {
   flex: none; width: 100%; min-height: 44px; border: 0; border-radius: 18px; padding: 11px 16px;
@@ -51,4 +51,4 @@
 .primary:disabled { opacity: .5; cursor: default; }
 
 .status { margin: 0; font-size: 14px; color: var(--muted); }
-.error { margin: 0; font-size: 14px; color: var(--high); }
+.error { margin: 0; font-size: 14px; color: var(--danger); }
