@@ -61,7 +61,7 @@ OWNERS.json, scripts/check-scope.mjs [공통] 담당표와 범위 검사
 | ② | 가입 | `/signup` | F1 | S1 | 이메일, 비밀번호, [가입하기]. 이메일 형식이 아니거나 비밀번호가 8자보다 짧으면 칸 옆에 이유. 가입하면 ④ 프로필 첫 안내(`?first=1`)로 | `POST /api/auth/signup` |
 | ③ | 로그인 | `/login` | F1 | (E2E 사전 로그인) | 이메일, 비밀번호, [로그인]. 실패 문구 | `POST /api/auth/login`, `POST /api/auth/logout` |
 | ④ | 프로필 | `/profile` | F1·F6 | S1·S7 | 평소 잠드는 시각(시각 선택, 기본 01:00), 민감도 3칩(둔한 편 / 보통 / 민감한 편), [저장] → ⑤ 홈의 저장 완료 말풍선, 첫 가입이면 설정 이유·다음 행동 안내, [로그아웃] → ① 첫 화면 | `GET/PUT /api/profile` |
-| ⑤ | 홈 | `/home` | F3·F5·F6 | S2~S7 시작점 | 캐릭터 표정·말풍선, 잘 때 남을 카페인 3단계 막대와 mg, "마지막 {시각} · {음료}", "많이 남음"이면 양 세기 표시 "× 312", "오늘 커피 N잔 ›", [마시기 전 확인], [이미 마신 음료 기록], [프로필], 확인 카드("어제 ○○ 어땠어?" + [답하기]), 카페 앞이면 말풍선 "카페 앞이네?" + [뭐 마실지 볼래] / [괜찮아], 아래 탭(초원 · 오늘 기록 · 마시기 전 확인 · 카페 · 프로필) | `GET /api/home`, `GET /api/cafes/near?lat=&lng=` |
+| ⑤ | 홈 | `/home` | F3·F5·F6 | S2~S7 시작점 | 캐릭터 표정·말풍선, 잘 때 남을 카페인 3단계 막대와 mg, "마지막 {시각} · {음료}", "많이 남음"이면 양 세기 표시 "× 312", "오늘 커피 N잔 ›", [마시기 전 확인], [이미 마신 음료 기록], [프로필], 확인 카드("어제 ○○ 어땠어?" + [답하기]), 카페 앞이면 말풍선 "카페 앞이네?" + [뭐 마실지 볼래] / [괜찮아], 아래 탭(초원 · 오늘 기록 · 마시기 전 확인 · 카페 · 프로필) | `GET /api/cafes/near?lat=&lng=` |
 | ⑥ | 음료 고르기 | `/drink/select?mode=before\|already\|cafe` | F2·F3·F4 | S2~S5 | 브랜드별 공식 메뉴 목록("메가커피 메가리카노 (ICE)" 형식), 용량 칩("946ml" 형식). already 모드면 [기록하기]. [닫기](✕) → ⑤ 홈 | `GET /api/drinks`, already 모드 `POST /api/records` |
 | ⑦ | 상황·잘 시각 | `/drink/situation` | F2 | S2~S4 | [이미 음료가 있어요] / [아직 바꿀 수 있어요] (cafe 모드면 바꿀 수 있음으로 건너뜀), "이번에는 몇 시에 잘 예정이야?" + [오늘도 01:00] / [바꾸기](빠른 시각 또는 00:00~23:59 직접 선택), 로드 실패 시 같은 화면에서 재시도 | 없음 |
 | ⑧ | 미리 보기 | `/drink/preview` | F2·F3 | S2~S4 | 캐릭터 반응, 선택지 카드([이미 음료가 있어요]: 그대로 / 반만 / 3분의 1만, [아직 바꿀 수 있어요]: 원래대로 / 작은 사이즈 / 하프샷 / 디카페인 중 데이터에 있는 것. 카드마다 "이 음료로 01:00에 더해지는 카페인 Nmg"과 구간), 추천 표시(추천 양 배지, 없으면 "추천 양 · 오늘은 여기까지" 띠와 "{잘 시각}에 남을 카페인 Nmg"), [이 양으로 마시기 시작], [이번에는 마시지 않기]([이미 음료가 있어요]일 때) | `POST /api/preview`(저장 없음), `POST /api/records` |
@@ -136,7 +136,7 @@ scenarios.yaml이 확인하는 글자다. 바꾸려면 팀 합의 후 통합 담
 | --- | --- | --- | --- | --- |
 | p1 | `p1` | ① 첫 화면, ② 가입 | S1 | `app/page.tsx`, `app/signup/`, `app/api/auth/signup/` |
 | p2 | `p2` | ③ 로그인, ④ 프로필 | S1, S7 끝 | `app/login/`, `app/profile/`, `app/api/auth/login·logout/`, `app/api/profile/` |
-| p3 | `p3` | ⑤ 홈, ⑨ 오늘 기록 | S2~S7 시작점, S6 | `app/home/`, `app/today/`, `app/api/home/`, `app/api/cafes/`, `app/api/records/[id]/` |
+| p3 | `p3` | ⑤ 홈, ⑨ 오늘 기록 | S2~S7 시작점, S6 | `app/home/`, `app/today/`, `app/api/cafes/`, `app/api/records/[id]/` |
 | p4 | `p4` | ⑥ 음료 고르기, ⑦ 상황·잘 시각 | S2~S5 | `app/drink/select/`, `app/drink/situation/`, `app/api/drinks/` |
 | p5 | `p5` | ⑧ 미리 보기, ⑩ 확인 질문 | S2~S4, S7 | `app/drink/preview/`, `app/check/`, `app/api/preview/`, `app/api/checks/` |
 | lead | main | [공통] 전부, E2E spec 8개(S1~S8), merge·모의 채점 | 전체 | 전부 |
