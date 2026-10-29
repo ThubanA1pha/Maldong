@@ -18,6 +18,9 @@ import s from "./situation.module.css";
 
 type Drink = { id: string; brand: string; menu: string; size: string };
 
+// [바꾸기]를 누르면 보이는 잘 시각. 고르면 확인 버튼 없이 바로 미리 보기로 간다(S3 steps).
+const BEDTIMES = ["22:00", "23:00", "00:00", "01:00", "02:00", "03:00"];
+
 function Situation() {
   const router = useRouter();
   const params = useSearchParams();
@@ -86,18 +89,19 @@ function Situation() {
         error ? <p className={s.error} role="alert">{error}</p> : <p className={s.status}>불러오는 중이에요…</p>
       ) : (
         <div className={s.actions}>
-          {editing ? (
-            <label className={s.field}>오늘 잘 시각
-              <input id="today-bedtime" type="time" value={bedtime} onChange={(e) => setBedtime(e.target.value)} />
-            </label>
-          ) : null}
-          <button className={`${s.btn} ${s.btnPrimary}`} aria-label={bedtimeButton(bedtime)} disabled={!bedtime} onClick={() => go(bedtime)}>
+          <button className={`${s.btn} ${s.btnPrimary}`} aria-label={bedtimeButton(bedtime)} onClick={() => go(bedtime)}>
             오늘도 <span className={s.num}>{bedtime}</span>
           </button>
-          {editing ? null : (
+          {editing ? (
+            <div className={s.times} role="group" aria-label="잘 시각">
+              {BEDTIMES.map((t) => (
+                <button key={t} className={s.time} aria-pressed={t === bedtime} onClick={() => go(t)}>{t}</button>
+              ))}
+            </div>
+          ) : (
             <button className={`${s.btn} ${s.btnSoft}`} onClick={() => setEditing(true)}>{BTN.changeBedtime}</button>
           )}
-          <p className={s.hint}>프로필의 평소 잠드는 시각이 미리 채워져 있어요</p>
+          <p className={s.hint}>{editing ? "고르면 그 시각으로 바로 계산해요" : "프로필의 평소 잠드는 시각이 미리 채워져 있어요"}</p>
         </div>
       )}
     </main>
