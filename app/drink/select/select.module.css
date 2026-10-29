@@ -11,13 +11,17 @@
 .day .logo { color: var(--accent); }
 .brand > img { width: 22px; height: 22px; }
 
-.scrim { position: fixed; inset: 0; background: var(--scrim); }
+.scrim { position: fixed; inset: 0; background: var(--scrim); transition: opacity .2s ease; cursor: pointer; }
 
 .sheet {
   position: fixed; left: 0; right: 0; bottom: 0; max-width: 430px; margin: 0 auto; height: min(470px, calc(100dvh - 120px));
   display: flex; flex-direction: column; gap: 10px; padding: 10px 20px calc(24px + env(safe-area-inset-bottom, 0px));
   background: var(--bg); border-radius: 28px 28px 0 0;
+  transition: transform .2s ease; will-change: transform;
 }
+/* 손잡이 + 제목: 아래로 끌어 시트를 닫는 곳. 손가락이 잡기 쉽게 위아래 여백을 넓힌다 */
+.dragZone { flex: none; display: flex; flex-direction: column; gap: 10px; margin: -10px -20px 0; padding: 10px 20px 0; touch-action: none; cursor: grab; user-select: none; }
+.dragZone:active { cursor: grabbing; }
 .handle { align-self: center; flex: none; width: 40px; height: 5px; border-radius: 3px; background: var(--line); }
 .title { margin: 0; font-size: 20px; font-weight: 700; color: var(--fg); }
 .already { height: min(496px, calc(100dvh - 120px)); }
