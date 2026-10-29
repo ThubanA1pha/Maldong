@@ -1,0 +1,23 @@
+/* ⑩ 확인 질문 전용 모양. 색·글꼴·간격은 app/globals.css 토큰만 쓴다. */
+.header { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; margin: -4px -4px 0; }
+.back { width: 40px; height: 40px; border: 0; background: none; color: var(--fg); font-size: 22px; cursor: pointer; border-radius: 50%; text-decoration: none; display: grid; place-items: center; }
+.headerTitle { text-align: center; font-size: 16px; font-weight: 700; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.scene { position: relative; margin: 0 -16px; padding: 22px 16px 18px; min-height: 160px; background: color-mix(in srgb, var(--ok) 22%, var(--surface)); display: flex; align-items: center; gap: 12px; overflow: hidden; }
+.sun { position: absolute; top: 16px; right: 28px; width: 38px; height: 38px; border-radius: 50%; background: color-mix(in srgb, var(--mid) 45%, var(--surface)); box-shadow: 0 0 0 10px color-mix(in srgb, var(--mid) 15%, transparent); }
+.hill { position: absolute; left: -10%; right: -10%; bottom: -40px; height: 90px; border-radius: 50%; background: color-mix(in srgb, var(--ok) 32%, var(--surface)); }
+.char { position: relative; z-index: 1; flex: 0 0 auto; transform: scale(.72); transform-origin: left center; }
+.bubble { position: relative; z-index: 1; flex: 1; margin: 0; padding: 10px 14px; border-radius: var(--radius); background: var(--surface); font-weight: 700; line-height: 1.45; }
+
+.card { display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 16px; border-radius: var(--radius); background: var(--surface); }
+.card[data-locked="true"] { opacity: .55; }
+.q { margin: 0; font-size: 15px; font-weight: 700; }
+.seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 4px; border-radius: 999px; background: var(--bg); }
+.segBtn { padding: 10px 0; border: 0; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; font-weight: 600; }
+.segBtn[aria-pressed="true"] { background: var(--fg); color: var(--accent-fg); }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sleepBtn { padding: 16px 8px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); font-weight: 700; cursor: pointer; }
+.sleepBtn[aria-pressed="true"] { border-color: var(--fg); background: var(--fg); color: var(--accent-fg); }
+.sleepBtn:disabled { cursor: default; }
+.hint { margin: 0; font-size: 13px; color: var(--muted); }
+.state { display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: var(--radius); background: var(--surface); }
