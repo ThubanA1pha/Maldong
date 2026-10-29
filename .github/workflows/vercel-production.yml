@@ -1,0 +1,79 @@
+name: Vercel production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TELEMETRY_DISABLED: '1'
+    steps:
+      - name: Check out the commit being deployed
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 22
+
+      - name: Check deployment configuration
+        run: |
+          for name in VERCEL_ORG_ID VERCEL_PROJECT_ID VERCEL_TOKEN; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing GitHub Secret: $name"
+              exit 1
+            fi
+          done
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@65.7.0 --no-audit --no-fund
+
+      # Vercel builds the checked-out source using the existing production
+      # settings and secrets. Database and login secrets stay on Vercel.
+      - name: Deploy to the existing Vercel production project
+        run: |
+          vercel deploy --prod --yes \
+            --project "$VERCEL_PROJECT_ID" \
+            --regions sin1 \
+            --token "$VERCEL_TOKEN" \
+            --env "RELEASE_ID=$GITHUB_SHA" \
+            --build-env "RELEASE_ID=$GITHUB_SHA"
+
+      - name: Verify production release
+        run: |
+          for attempt in $(seq 1 30); do
+            if response=$(curl --fail --silent --show-error --max-time 10 \
+              https://maldong.vercel.app/__health); then
+              if jq --exit-status --arg sha "$GITHUB_SHA" \
+                '.status == "ok" and .releaseId == $sha' \
+                <<< "$response" > /dev/null; then
+                {
+                  echo '### Production deployment verified'
+                  echo '- URL: https://maldong.vercel.app'
+                  echo "- Release: $GITHUB_SHA"
+                  echo '- Health: HTTP 200, status ok, releaseId matches this commit'
+                } >> "$GITHUB_STEP_SUMMARY"
+                exit 0
+              fi
+            fi
+            sleep 5
+          done
+          echo '::error::Production /__health did not report the deployed commit SHA.'
+          exit 1
