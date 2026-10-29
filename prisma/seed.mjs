@@ -25,6 +25,13 @@ async function main() {
     await db.cafe.upsert({ where: { id: c.id }, create: { id: c.id, ...row }, update: row });
   }
 
+  // 공개 배포(Vercel)에서는 저장소에 적힌 기본 비밀번호로 데모 계정을 만들지 않는다.
+  // 배포 환경변수에 SEED_USER_PASSWORD·SEED_TIRED_PASSWORD를 따로 넣었을 때만 만든다.
+  if (process.env.VERCEL && (!process.env.SEED_USER_PASSWORD || !process.env.SEED_TIRED_PASSWORD)) {
+    console.log("seed: 배포 환경에 데모 계정 비밀번호가 없어 계정은 만들지 않음 (음료·카페만)");
+    return;
+  }
+
   await seedTired();
   if (await db.user.findUnique({ where: { email: EMAIL } })) return; // 이미 시드됨
   const user = await db.user.create({
