@@ -39,7 +39,18 @@
 }
 .brand img { animation: nod 4s ease-in-out infinite; transform-origin: 50% 90%; }
 .name { margin: 0; font-family: var(--font-display); font-size: 44px; line-height: 44px; letter-spacing: -0.5px; font-weight: 400; color: var(--accent); }
-.tagline { margin: 0; font-size: 15px; font-weight: 500; color: var(--accent-strong); }
+.tagline {
+  width: calc(100% - 40px);
+  max-width: 360px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--accent-strong);
+  text-align: center;
+  word-break: keep-all;
+  text-wrap: balance;
+}
 
 /* ---- 초원: 화면 아래 끝까지 채운다. 솜이는 언덕 위에 선다 ---- */
 .ground { position: absolute; left: 0; right: 0; bottom: 0; height: var(--ground); }
