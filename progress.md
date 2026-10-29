@@ -42,7 +42,7 @@
 - [x] 사용자 핵심 흐름 3~8개를 scenarios.example.yaml 참고해 docs/scenarios.yaml에 작성(steps는 화면의 메뉴·버튼 이름으로 한 줄에 한 동작, 로그인 흐름은 account 지정), YAML 파서로 형식 확인 후 기본 브랜치 push
 - [ ] 서비스의 AI 호출 필요 여부 확인
 - [ ] README 등 기존 문서에 확인된 구현 설계 기록, 기본 브랜치 push
-- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸: https://github.com/ThubanA1pha/Maldong/blob/main/docs/problem.yaml / d5eba92cbca71a80a23d3764c8c53bf6a7df7d4c / (10/30) experiences·sources·why_ours·solution_paths·insight·features·design_decision 1~7 채움, scenarios S1~S7. 발생 빈도는 A(중간고사 기간 7일 내내, 스크린타임의 새벽 1~2시 사용 기록)·B(10/23 마감 주 일주일 내내, GitHub 커밋 기록의 마지막 커밋 시각 새벽 3시 이후) 답변으로 채움. 남은 [미기록]: 낮잠 횟수
+- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸: https://github.com/ThubanA1pha/Maldong/blob/main/docs/problem.yaml / d5eba92cbca71a80a23d3764c8c53bf6a7df7d4c / (10/30) experiences·sources·why_ours·solution_paths·insight·features·design_decision 1~7 채움, scenarios S1~S8. 발생 빈도는 A(중간고사 기간 7일 내내, 스크린타임의 새벽 1~2시 사용 기록)·B(10/23 마감 주 일주일 내내, GitHub 커밋 기록의 마지막 커밋 시각 새벽 3시 이후) 답변으로 채움. 남은 [미기록]: 낮잠 횟수
 
 ## 3. 최소 화면 docker 실행·CI·첫 배포
 
