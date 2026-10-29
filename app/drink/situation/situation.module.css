@@ -17,7 +17,7 @@
   padding: 18px; border-radius: 18px; border: 2px solid var(--surface); background: var(--surface);
   text-align: left; cursor: pointer; color: var(--fg);
 }
-.option.primary { border-color: var(--accent); background: var(--accent-soft); }
+.option:hover, .option:active { border-color: var(--accent); background: var(--accent-soft); }
 .option:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
 .optionTitle { display: block; font-size: 17px; font-weight: 700; }
 .optionSub { display: block; padding-top: 2px; font-size: 12px; color: var(--muted); }
