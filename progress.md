@@ -26,12 +26,12 @@
 
 - [x] 종이 기록 수령(학생이 채팅에 옮겨 적거나 사진 첨부)
 - [x] problem.example.yaml을 참고해 docs/problem.yaml 작성
-- [ ] 원문 의도와 불명확한 내용 확인, 없는 근거는 빈칸 유지
-- [ ] 2-A 문제 다지기: 캔버스 칸을 질문으로 다짐(Agent가 해법·후보·예시 답을 먼저 내지 않음, 학생 답이 없는 칸은 "학생 답 대기")
-- [ ] 팀원 경험을 언제·어떤 장면·어떻게 대응했는지까지 experiences에 기록
-- [ ] 외부 자료는 열리는 URL을 sources에 그대로 적고 원문이 주장을 직접 뒷받침하는지 확인, 출처 없는 수치 없음
-- [ ] 문제가 '우리 기능이 없어서'가 아니라 실제 상황·행동으로 서술됐는지 확인
-- [ ] 2-B 해법 찾기: 학생이 낸 해법과 결정을 solution_paths에, 기존 대안 대신 이 해법이어야 하는 이유를 학생 말로 why_ours에 작성
+- [x] 원문 의도와 불명확한 내용 확인, 없는 근거는 빈칸 유지
+- [x] 2-A 문제 다지기: 캔버스 칸을 질문으로 다짐(Agent가 해법·후보·예시 답을 먼저 내지 않음, 학생 답이 없는 칸은 "학생 답 대기")
+- [x] 팀원 경험을 언제·어떤 장면·어떻게 대응했는지까지 experiences에 기록
+- [x] 외부 자료는 열리는 URL을 sources에 그대로 적고 원문이 주장을 직접 뒷받침하는지 확인, 출처 없는 수치 없음
+- [x] 문제가 '우리 기능이 없어서'가 아니라 실제 상황·행동으로 서술됐는지 확인
+- [x] 2-B 해법 찾기: 학생이 낸 해법과 결정을 solution_paths에, 기존 대안 대신 이 해법이어야 하는 이유를 학생 말로 why_ours에 작성
 - [x] 2-C features에 학생이 고른 해법의 기능별 입력·결과·완료 조건 작성 (F1~F6)
 - [x] YAML 문법 검사, 등록된 레포의 기본 브랜치에 docs/problem.yaml push
 - [x] 학생이 개인 로그인으로 우리 팀 → 문제 정의를 열어 캔버스 표시 확인(Agent는 화면을 열 수 없음, 약 1분 캐시)
@@ -42,7 +42,7 @@
 - [x] 사용자 핵심 흐름 3~8개를 scenarios.example.yaml 참고해 docs/scenarios.yaml에 작성(steps는 화면의 메뉴·버튼 이름으로 한 줄에 한 동작, 로그인 흐름은 account 지정), YAML 파서로 형식 확인 후 기본 브랜치 push
 - [ ] 서비스의 AI 호출 필요 여부 확인
 - [ ] README 등 기존 문서에 확인된 구현 설계 기록, 기본 브랜치 push
-- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸: https://github.com/ThubanA1pha/Maldong/blob/main/docs/problem.yaml / d5eba92cbca71a80a23d3764c8c53bf6a7df7d4c / (10/30) experiences·sources·why_ours·solution_paths·insight·features·design_decision 1~7 채움, scenarios S1~S7
+- 문제정의·구현 설계 링크 / commit SHA / 확인할 빈칸: https://github.com/ThubanA1pha/Maldong/blob/main/docs/problem.yaml / d5eba92cbca71a80a23d3764c8c53bf6a7df7d4c / (10/30) experiences·sources·why_ours·solution_paths·insight·features·design_decision 1~7 채움, scenarios S1~S7. 발생 빈도는 A(중간고사 기간 7일 내내, 스크린타임의 새벽 1~2시 사용 기록)·B(10/23 마감 주 일주일 내내, GitHub 커밋 기록의 마지막 커밋 시각 새벽 3시 이후) 답변으로 채움. 남은 [미기록]: 낮잠 횟수
 
 ## 3. 최소 화면 docker 실행·CI·첫 배포
 
