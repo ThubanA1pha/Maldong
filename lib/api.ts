@@ -18,3 +18,10 @@ export async function withUser(fn: (userId: string) => Promise<unknown>) {
   if (!userId) return NextResponse.json({ error: "로그인이 필요해요." }, { status: 401 });
   return handle(() => fn(userId));
 }
+
+// 본문이 깨진 JSON이거나 객체가 아니면 400과 한국어 문장으로 돌려보낸다(500 대신).
+export async function readJson(req: Request): Promise<Record<string, any>> { // eslint-disable-line @typescript-eslint/no-explicit-any
+  const body = await req.json().catch(() => null);
+  if (!body || typeof body !== "object" || Array.isArray(body)) throw new UserError("요청 내용을 읽지 못했어요. 다시 시도해 주세요.");
+  return body as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+}

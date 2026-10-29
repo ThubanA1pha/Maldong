@@ -1,9 +1,9 @@
 # 구현 명세 (화면 10개 · 공통 스펙 · 담당 5명)
 
-> 에이전트와 개발자가 화면을 나눠 만들 때 기준으로 삼는 문서다. 기능·흐름의 원본은 `docs/problem.yaml`(F1~F6)과 `docs/scenarios.yaml`(S1~S7), 용어·문구는 `lib/copy.ts`, 계산은 `lib/caffeine.ts`다. 팀 공지·점검 결과는 main이 아니라 `notes` 브랜치의 `NOTES.md`에 있다.
+> 에이전트와 개발자가 화면을 나눠 만들 때 기준으로 삼는 문서다. 기능·흐름의 원본은 `docs/problem.yaml`(F1~F6)과 `docs/scenarios.yaml`(S1~S8), 용어·문구는 `lib/copy.ts`, 계산은 `lib/caffeine.ts`다. 팀 공지·점검 결과는 main이 아니라 `notes` 브랜치의 `NOTES.md`에 있다.
 > 이 문서와 원본이 어긋나면 원본이 이긴다. 이 문서를 고칠 때는 원본도 같은 커밋에서 맞춘다.
 > **[공통]** 표시가 붙은 파일은 통합 담당(팀장 PC)만 고친다. 바꿔야 하면 멈추고 요청한다.
-> **[역산 초안]** 2절의 화면 10개는 디자인 프레임이 아니라 `scenarios.yaml`(S1~S7)에서 거꾸로 뽑은 것이다. 프레임이 나오면 프레임이 기준이고, 통합 담당이 이 표와 `OWNERS.json`을 고친다.
+> **[역산 초안]** 2절의 화면 10개는 디자인 프레임이 아니라 `scenarios.yaml`(S1~S8)에서 거꾸로 뽑은 것이다. 프레임이 나오면 프레임이 기준이고, 통합 담당이 이 표와 `OWNERS.json`을 고친다.
 > **뼈대 상태**: DB·로그인·계산·모든 API·고정 문구·캐릭터·Docker가 완성돼 있고, 화면 10개는 흐름이 실제로 눌리는 최소 버전이다. 각 담당은 자기 화면의 디자인·배치·상태 화면을 새로 만든다.
 
 ## 0. 작업 방식
@@ -99,7 +99,7 @@ recommend(totalNow, drinkMg, ...): [1, 1/2, 1/3] 중 totalNow + added < 100 인 
 | Profile | userId, usualBedtime("HH:MM"), sensitivity(dull·normal·sensitive), mismatchDirection(worse·better·null), mismatchCount(int) |
 | Drink | id, brand, menu, size, caffeineMg, isDecaf, sourceUrl |
 | Cafe | id, name, lat, lng, radiusM(기본 50) |
-| Record | id, userId, drinkId, kind(started·already), portion(full·half·third·halfshot), plannedMg, startedAt, bedtime("HH:MM"), predictedBand(ok·mid·high), confirmedPortion(all·half·little·none·null), sleepAnswer(great·ok·tossed·barely·null), answeredAt |
+| Record | id, userId, drinkId, option(full·half·third·original·small·halfshot·decaf·already), plannedMg, startedAt, bedtime("HH:MM"), predictedBand(ok·mid·high), confirmedPortion(all·half·little·none·null), sleepAnswer(great·ok·tossed·barely·null), answeredAt |
 
 - [이번에는 마시지 않기]는 Record를 만들지 않는다. 미리 보기도 만들지 않는다.
 - 확인 카드는 `startedAt`이 오늘보다 이전이고 `answeredAt`이 없는 Record마다 생긴다.
@@ -121,11 +121,11 @@ scenarios.yaml이 확인하는 글자다. 바꾸려면 팀 합의 후 통합 담
 
 - 계정 "학생": `SEED_USER_EMAIL`, `SEED_USER_PASSWORD` (docker-compose.yml에 값 그대로)
 - 프로필: 평소 01:00, 보통, 못 잤다 카운터 1(worse)
-- 오늘 기록: "컴포즈커피 카페라떼 레귤러 · 다 마심" 1건 (이 이름은 오늘 하나뿐)
-- 어제 기록: "스타벅스 아이스 아메리카노 톨", 확인 전 1건
+- 오늘 기록: "컴포즈커피 I-카페라떼 591ml · 다 마심" 1건 (이 이름은 오늘 하나뿐)
+- 어제 기록: "스타벅스 아이스 카페 아메리카노 Tall 355ml", 확인 전 1건
 - 지난 5일 기록 여러 건(확인 완료)
-- 음료: 메가커피·컴포즈커피·빽다방·스타벅스의 아메리카노·라떼, 사이즈별, 공개 함량과 출처 링크 (기획팀 표)
-- 계정 "피곤한 학생"(S8 데모용, 시나리오 반영 예정): `SEED_TIRED_EMAIL`, `SEED_TIRED_PASSWORD`. 평소 잠드는 시각 = 시드 시각 + 2시간, 민감도 보통, 1시간 전에 "메가커피 아이스 아메리카노 라지 · 다 마심" 1건 → 언제 테스트해도 잘 때 남을 카페인이 "많이 남음"에서 시작
+- 음료: `prisma/drinks.json` 공식 23개 메뉴(메가커피·컴포즈커피·빽다방·스타벅스 아메리카노·라떼, ICE/HOT, 대용량은 별도 메뉴, 공식 이름·용량·함량·출처 링크)
+- 계정 "피곤한 학생"(S8): `SEED_TIRED_EMAIL`, `SEED_TIRED_PASSWORD`. 평소 잠드는 시각 = 시드 시각 + 2시간, 민감도 보통, 1시간 전에 "메가커피 아이스 아메리카노 라지 · 다 마심" 1건 → 언제 테스트해도 잘 때 남을 카페인이 "많이 남음"에서 시작
 - 카페: 대회장 1곳(광주 북구 자미로6번길 45, 35.165706, 126.907069, 반경 50m)
 
 ## 7. 담당 (5명 · 화면 2개씩) — 원본은 `OWNERS.json`
@@ -137,7 +137,7 @@ scenarios.yaml이 확인하는 글자다. 바꾸려면 팀 합의 후 통합 담
 | p3 | `p3` | ⑤ 홈, ⑨ 오늘 기록 | S2~S7 시작점, S6 | `app/home/`, `app/today/`, `app/api/home/`, `app/api/cafes/`, `app/api/records/[id]/` |
 | p4 | `p4` | ⑥ 음료 고르기, ⑦ 상황·잘 시각 | S2~S5 | `app/drink/select/`, `app/drink/situation/`, `app/api/drinks/` |
 | p5 | `p5` | ⑧ 미리 보기, ⑩ 확인 질문 | S2~S4, S7 | `app/drink/preview/`, `app/check/`, `app/api/preview/`, `app/api/checks/` |
-| lead | main | [공통] 전부, E2E spec 7개, merge·모의 채점 | 전체 | 전부 |
+| lead | main | [공통] 전부, E2E spec 8개(S1~S8), merge·모의 채점 | 전체 | 전부 |
 
 - 화면은 [역산 초안]의 최소 버전이 이미 동작한다. 담당은 그 위에 디자인·배치·로딩·빈 상태·오류 문구를 만든다.
 - `app/api/records/route.ts`(기록 만들기·오늘 목록)는 ⑥·⑧·⑨가 함께 쓰므로 [공통]이다.
