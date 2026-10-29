@@ -26,6 +26,8 @@ export const BTN = {
   no: "아니",
   answer: "답하기",
   cafeLook: "뭐 마실지 볼래",
+  close: "닫기",
+  undo: "되돌리기",
   cafeDismiss: "괜찮아",
 } as const;
 
@@ -95,7 +97,7 @@ export const HOME = {
 export const TODAY = {
   title: "오늘 기록",
   count: (n: number) => `오늘 커피 ${n}잔`,
-  countNote: "반만 마셔도 1잔으로 세요",
+  countNote: "반만 마셔도 1잔으로 세어요",
   deleteNote: "지우면 오늘 계산이 다시 바뀌어요",
 } as const;
 
@@ -134,6 +136,7 @@ export const PREVIEW = {
   noDrink: "고른 음료가 없어요. 음료부터 다시 골라 주세요.",
   pickOption: "선택지를 하나 골라 주세요",
   pickBeforeDrink: "그래도 마신다면 선택지를 먼저 골라 주세요",
+  bedMg: (hhmm: string, n: number) => `${hhmm}에 약 ${n}mg`,
 } as const;
 
 // ⑩ 확인 질문 (p5 요청 문구)
@@ -158,6 +161,14 @@ export const API_ERROR = {
   pickPortion: "마신 양을 골라 주세요.",
   pickSleep: "잠을 어떻게 잤는지 골라 주세요.",
   pickOption: "고를 수 없는 선택지예요.",
+  cannotRestore: "되돌릴 수 있는 시간이 지났거나 없는 기록이에요.",
+} as const;
+
+// 화면에서 API 오류가 났을 때 캐릭터 말풍선 (features F5: 오류도 같은 말투로)
+export const ERROR_SAY = {
+  general: "앗, 잠깐 문제가 생겼어. 다시 한 번 눌러 줄래?",
+  offline: "인터넷이 잠깐 끊긴 것 같아. 연결되면 다시 해 보자.",
+  restored: "되돌렸어. 기록이 다시 생겼어.",
 } as const;
 
 export const BAND_TEXT: Record<Band, string> = {

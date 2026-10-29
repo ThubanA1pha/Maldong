@@ -23,6 +23,16 @@ async function main() {
     const row = { brand: d.brand, menu: d.menu, size: d.size, sizeRank: d.sizeRank, caffeineMg: d.caffeineMg, isDecaf: !!d.isDecaf, sourceUrl: d.sourceUrl };
     await db.drink.upsert({ where: { id: d.id }, create: { id: d.id, ...row }, update: row });
   }
+  // drinks.json에서 빠진 음료(예: 공식 값이 없는 스타벅스 그란데)를 DB에서도 정리한다.
+  // 그 음료를 쓴 기록이 있으면 같은 메뉴의 공식 용량으로 옮긴 뒤 지우고, 옮길 곳이 없으면 남긴다.
+  const keep = new Set(data.drinks.map((d) => d.id));
+  const moveTo = { "sbux-iced-americano-g": "sbux-iced-americano-t", "sbux-latte-g": "sbux-latte-t" };
+  for (const old of await db.drink.findMany({ select: { id: true } })) {
+    if (keep.has(old.id)) continue;
+    if (moveTo[old.id]) await db.record.updateMany({ where: { drinkId: old.id }, data: { drinkId: moveTo[old.id] } });
+    if ((await db.record.count({ where: { drinkId: old.id } })) === 0) await db.drink.delete({ where: { id: old.id } });
+    else console.log(`seed: ${old.id}는 기록이 있어 남김`);
+  }
   for (const c of data.cafes) {
     const row = { name: c.name, lat: c.lat, lng: c.lng, radiusM: c.radiusM ?? 50 };
     await db.cafe.upsert({ where: { id: c.id }, create: { id: c.id, ...row }, update: row });

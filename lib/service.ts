@@ -62,11 +62,11 @@ export async function nearCafe(lat: number, lng: number) {
 
 // ---- 오늘 상태 (F5) ----
 async function todayRecords(userId: string, now: Date) {
-  return db.record.findMany({ where: { userId, startedAt: { gte: startOfToday(now) } }, include: { drink: true }, orderBy: { startedAt: "desc" } });
+  return db.record.findMany({ where: { userId, deletedAt: null, startedAt: { gte: startOfToday(now) } }, include: { drink: true }, orderBy: { startedAt: "desc" } });
 }
 
 async function bedtimeTotal(userId: string, now: Date, bedtimeHHMM: string, hl: number) {
-  const recs = await db.record.findMany({ where: { userId, startedAt: { gte: new Date(now.getTime() - 48 * 3_600_000) } } });
+  const recs = await db.record.findMany({ where: { userId, deletedAt: null, startedAt: { gte: new Date(now.getTime() - 48 * 3_600_000) } } });
   return totalAtBedtime(recs.map((r) => ({ mg: r.plannedMg, startedAt: r.startedAt })), nextBedtime(now, bedtimeHHMM), hl);
 }
 
@@ -76,7 +76,7 @@ export async function home(userId: string, now = new Date()) {
   const today = await todayRecords(userId, now);
   const total = await bedtimeTotal(userId, now, profile.usualBedtime, hl);
   const pending = await db.record.findMany({
-    where: { userId, answeredAt: null, startedAt: { lt: startOfToday(now) } }, include: { drink: true }, orderBy: { startedAt: "desc" },
+    where: { userId, answeredAt: null, deletedAt: null, startedAt: { lt: startOfToday(now) } }, include: { drink: true }, orderBy: { startedAt: "desc" },
   });
   return {
     usualBedtime: profile.usualBedtime,
@@ -93,8 +93,18 @@ export async function listToday(userId: string, now = new Date()) {
 }
 
 export async function deleteRecord(userId: string, recordId: string) {
-  const { count } = await db.record.deleteMany({ where: { id: recordId, userId } }); // 남의 기록은 지워지지 않는다
+  const { count } = await db.record.updateMany({ where: { id: recordId, userId, deletedAt: null }, data: { deletedAt: new Date() } }); // 남의 기록은 지워지지 않는다
   if (count === 0) throw new UserError("이미 지웠거나 없는 기록이에요.");
+}
+
+// [되돌리기]: [취소]로 지운 지 RESTORE_MINUTES 안이면 되살린다.
+export const RESTORE_MINUTES = 30;
+export async function restoreRecord(userId: string, recordId: string, now = new Date()) {
+  const { count } = await db.record.updateMany({
+    where: { id: recordId, userId, deletedAt: { gte: new Date(now.getTime() - RESTORE_MINUTES * 60_000) } },
+    data: { deletedAt: null },
+  });
+  if (count === 0) throw new UserError(API_ERROR.cannotRestore);
 }
 
 // ---- 마시기 전 확인 (F2·F3) ----
@@ -158,7 +168,7 @@ const PORTION_FACTOR = { all: 1, half: 0.5, little: 0.25, none: 0 } as const;
 export async function submitCheck(userId: string, recordId: string, portion: keyof typeof PORTION_FACTOR, sleep: SleepAnswer) {
   if (!Object.hasOwn(PORTION_FACTOR, portion)) throw new UserError(API_ERROR.pickPortion);
   if (!["great", "ok", "tossed", "barely"].includes(sleep)) throw new UserError(API_ERROR.pickSleep);
-  const r = await db.record.findFirst({ where: { id: recordId, userId }, include: { drink: true } });
+  const r = await db.record.findFirst({ where: { id: recordId, userId, deletedAt: null }, include: { drink: true } });
   if (!r) throw new UserError(API_ERROR.unknownRecord);
   if (r.answeredAt) throw new UserError("이미 답한 기록이에요.");
   const p = await db.profile.findUniqueOrThrow({ where: { userId } });
