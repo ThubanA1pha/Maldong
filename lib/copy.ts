@@ -3,7 +3,7 @@
 
 import type { Band, Option, SleepAnswer } from "./caffeine";
 
-export const SERVICE_NAME = "커피 한 모금 전";
+export const SERVICE_NAME = "말똥"; // Figma 로고 (이전: "커피 한 모금 전")
 export const SERVICE_ONE_LINER = "시험 기간, 커피를 마시기 직전에 캐릭터가 오늘 밤 잠에 남을 카페인을 먼저 알려 줘요.";
 
 export const BTN = {
@@ -25,7 +25,11 @@ export const BTN = {
   no: "아니",
   answer: "답하기",
   cafeLook: "뭐 마실지 볼래",
+  cafeDismiss: "괜찮아",
 } as const;
+
+// 하단 내비 탭 이름 ([마시기 전 확인]·[프로필]은 BTN을 쓴다)
+export const NAV = { home: "초원", today: "오늘 기록", cafe: "카페" } as const;
 
 export const bedtimeButton = (hhmm: string) => `오늘도 ${hhmm}`;
 export const todayLink = (n: number) => `오늘 커피 ${n}잔 ›`;
@@ -67,6 +71,30 @@ export const SAY = {
   recommendStop: "오늘은 여기까지",
   thanks: "알려 줘서 고마워. 다음 계산에 반영할게.",
   recommend: (label: string) => `${label} 마시는 걸 추천해.`,
+  cafeAsk: "주문 전에 뭐 마실지 같이 볼래?",
+} as const;
+
+// 홈 말풍선 (Figma "홈 상태 3단계 기준 표"). 줄바꿈은 말풍선에서 그대로 보인다.
+const hourText = (hhmm: string) => { const h = Number(hhmm.slice(0, 2)); return h === 0 ? "자정" : `${h}시`; };
+export const HOME_LINE: Record<Band, (hhmm: string) => string> = {
+  ok: (hhmm) => `오늘 밤 ${hourText(hhmm)}에 같이 자는 거지?\n지금까진 아주 좋아`,
+  mid: () => "조금 남겠다.\n다음 잔은 반만 어때?",
+  high: () => "양 312마리… 왜 안 졸리지…?\n오늘은 여기까지 어때?",
+};
+
+export const HOME = {
+  bedtimeCaption: (hhmm: string) => `${hhmm}에 남을 카페인`,
+  lastRecord: (time: string, drink: string) => `마지막 ${time} · ${drink}`,
+  checkSub: "마신 양이랑 잠만 · 10초",
+  cafeNear: (name: string) => `${name} · 50m 안`,
+  sheepCount: "× 312",
+} as const;
+
+export const TODAY = {
+  title: "오늘 기록",
+  count: (n: number) => `오늘 커피 ${n}잔`,
+  countNote: "반만 마셔도 1잔으로 세요",
+  deleteNote: "지우면 오늘 계산이 다시 바뀌어요",
 } as const;
 
 export const BAND_TEXT: Record<Band, string> = {
