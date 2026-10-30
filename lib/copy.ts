@@ -76,6 +76,7 @@ export const SAY = {
   recorded: "기록했어. 다음에 얼마나 마셨는지 알려 줘.",
   deleted: "기록을 지웠어요",
   empty: "아직 오늘 커피 기록이 없어요",
+  recommendStop: "오늘은 여기까지",
   thanks: "알려 줘서 고마워. 다음 계산에 반영할게.",
   recommend: (label: string) => `${label} 마시는 걸 추천해.`,
   cafeAsk: "주문 전에 뭐 마실지 같이 볼래?",
@@ -158,13 +159,6 @@ export const CHECK = {
   gone: "이 기록은 이미 답했거나 찾을 수 없어요.",
   goneHelp: "홈에서 남아 있는 확인 카드를 다시 골라 주세요.",
   home: "홈으로",
-} as const;
-
-// 없는 주소(404)와 예상하지 못한 오류 화면
-export const NOT_FOUND = {
-  line: "여기는 아무것도 없어.\n같이 돌아가자",
-  home: "홈으로",
-  start: "처음으로",
 } as const;
 
 // API 오류 안내 (서버가 400과 함께 돌려주는 문장)

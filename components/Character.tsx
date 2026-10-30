@@ -15,7 +15,7 @@ const FACE: Record<Mood, { label: string; src: string; w: number }> = {
 };
 
 // size = 그림 칸의 너비(px). Figma 기준 칸은 120×128이고 발끝을 칸 아래에 맞춘다.
-export function CharacterFace({ band, mood, size = 120 }: { band: Band; mood?: Mood; size?: number }) {
+export function CharacterFace({ band, mood, size = 120, flip = false }: { band: Band; mood?: Mood; size?: number; flip?: boolean }) {
   const face = FACE[mood ?? band];
   return (
     <div
@@ -28,7 +28,7 @@ export function CharacterFace({ band, mood, size = 120 }: { band: Band; mood?: M
         src={face.src}
         alt=""
         width={Math.round((size * face.w) / 120)}
-        style={{ display: "block", height: "auto" }}
+        style={{ display: "block", height: "auto", transform: flip ? "scaleX(-1)" : undefined }}
       />
     </div>
   );
